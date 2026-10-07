@@ -5,10 +5,16 @@ completar y agrega lo nuevo. **Nada de esto debe inventarse**: lo entrega el equ
 
 ## Bloqueantes para salir a producción
 
-- [ ] **Endpoint de formularios:** elegir servicio o CRM y definir `PUBLIC_FORM_ENDPOINT`
-      (ver `docs/06-despliegue.md`). Sin él, los formularios muestran WhatsApp y email.
-- [ ] **Hosting y dominio:** elegir hosting (recomendado Cloudflare Pages o Netlify),
-      conectar el repo, apuntar el DNS y definir la versión canónica (con o sin `www`).
+- [ ] **Formularios → CRM de Toolyx:** crear el webhook de entrada y definir la variable
+      `PUBLIC_FORM_ENDPOINT` en GitHub (ver `docs/06-despliegue.md`). Sin ella, los formularios
+      muestran WhatsApp y email.
+- [x] **Hosting:** Toolyx OS, publicado desde la rama `deploy` (flujo `deploy.yml`).
+- [ ] **Conectar el repo en Toolyx** (Importar web → Desde GitHub → rama `deploy`), el webhook
+      en GitHub y el primer **Publicar**.
+- [ ] **Dominio:** conectar `www.welcomestudentsgroup.com.au` en Toolyx (CNAME), redirigir la raíz
+      y definir la variable `SITE_URL` en GitHub.
+- [ ] **Revisar tras el primer publish:** sin errores de CSP en la consola, un solo botón de
+      WhatsApp, páginas internas (`/about/`, `/services/`…) cargando bien.
 - [ ] **Política de privacidad y términos:** revisión legal de `/privacy/` y `/terms/`
       (hoy son borradores con `noindex`). Al aprobarlos, quitar `noindex` en ambas páginas
       y el filtro en `astro.config.mjs` (sitemap).

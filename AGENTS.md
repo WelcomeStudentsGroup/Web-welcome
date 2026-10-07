@@ -51,6 +51,10 @@ atributos `style=""`, `onclick=""`, `href="#"`, textos `[Insert…]`, ids duplic
 `target=_blank` sin `noopener`, fuentes incrustadas como `data:` o espacios faltantes junto a enlaces.
 La CI de GitHub corre lo mismo en cada push y pull request.
 
+**Despliegue:** cada push a `main` ejecuta `.github/workflows/deploy.yml`, que verifica, compila y
+copia `dist/` a la rama `deploy`; **Toolyx OS** publica esa rama automáticamente. No edites la
+rama `deploy` a mano. Detalles en `docs/06-despliegue.md`.
+
 ## 4. Estructura
 
 ```

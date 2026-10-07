@@ -44,11 +44,15 @@ export default defineConfig({
   ],
   security: {
     csp: {
+      // os.toolyx.com: píxel de estadísticas/atribución de Toolyx OS (hosting actual).
+      scriptDirective: {
+        resources: ["'self'", 'https://os.toolyx.com'],
+      },
       directives: [
         "default-src 'self'",
         "img-src 'self' data:",
         "font-src 'self'",
-        `connect-src 'self'${formOrigin ? ' ' + formOrigin : ''}`,
+        `connect-src 'self' https://os.toolyx.com${formOrigin ? ' ' + formOrigin : ''}`,
         `form-action 'self'${formOrigin ? ' ' + formOrigin : ''}`,
         "base-uri 'self'",
         "object-src 'none'",

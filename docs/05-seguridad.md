@@ -18,6 +18,9 @@ form-action 'self' [origen del endpoint]; base-uri 'self'; object-src 'none';
 upgrade-insecure-requests; script-src 'self' 'sha256-…'; style-src 'self' 'sha256-…'
 ```
 
+`https://os.toolyx.com` está permitido en `script-src` y `connect-src` porque el sitio se aloja
+en Toolyx OS, que inyecta su píxel de estadísticas y atribución (ver `docs/06-despliegue.md`).
+
 Consecuencias para quien desarrolla:
 - ❌ Prohibido `style="..."`, `onclick="..."`, `<script src="https://cdn…">` y Google Fonts.
 - ✅ Usar clases CSS y `<script>` dentro de componentes `.astro` (Astro calcula los hashes).
@@ -37,7 +40,8 @@ Consecuencias para quien desarrolla:
 | `Permissions-Policy` | cámara, micrófono, geolocalización, pagos… desactivados | Abuso de APIs |
 | `Cross-Origin-Opener-Policy` | `same-origin` | Ataques entre ventanas |
 
-`_headers` funciona en Netlify y Cloudflare Pages. Para otros hostings, ver
+`_headers` funciona en Netlify y Cloudflare Pages (**Toolyx OS no lo lee**: en ese hosting las
+cabeceras las define la plataforma). Para otros hostings, ver
 `docs/06-despliegue.md`. Verificar en https://securityheaders.com y https://observatory.mozilla.org
 
 > HSTS con `preload`: confirmar que **todos** los subdominios sirven HTTPS antes de

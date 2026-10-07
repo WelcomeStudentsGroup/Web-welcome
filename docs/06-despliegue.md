@@ -20,7 +20,67 @@ Se definen en el panel del hosting (o en `.env` en local, ver `.env.example`).
 - El endpoint debe aceptar `POST` con `Content-Type: application/json`, responder 2xx si
   todo salió bien y permitir CORS desde el dominio del sitio.
 
-## Hostings recomendados
+## Hosting actual: Toolyx OS
+
+El sitio se aloja en **Toolyx OS** (módulo *Web*), conectado a GitHub. Toolyx publica
+archivos ya compilados (no ejecuta `npm run build`), así que el flujo es:
+
+```
+push a main ──► GitHub Actions (.github/workflows/deploy.yml)
+                 npm ci → npm run verify → copia dist/ a la rama `deploy`
+                        ──► webhook de GitHub ──► Toolyx publica una versión nueva
+```
+
+### Configuración inicial (una sola vez, desde el panel de Toolyx)
+1. **Web → Constructor → Nueva web** (nombre: *Welcome Students Group*) → **Importar web → Desde GitHub**.
+2. Dirección del repositorio, apuntando a la rama `deploy`:
+   `https://github.com/WelcomeStudentsGroup/Web-welcome/tree/deploy`
+   (el repo es público: no hace falta token).
+3. **Conectar y traer**. Toolyx muestra una **URL de webhook** y un **Secret** (solo una vez).
+4. En GitHub: *Settings → Webhooks → Add webhook* → pegar la URL en *Payload URL*,
+   *Content type* `application/json`, pegar el *Secret*, evento *Just the push event* → *Add webhook*.
+5. En Toolyx: **Vista previa** y, si todo está bien, un admin pulsa **Publicar**. Desde ese
+   primer Publicar, cada push a `deploy` publica solo.
+6. **Dominio propio:** *Diseño y ajustes → Dominio propio* → `www.welcomestudentsgroup.com.au` →
+   crear el CNAME que indica la pantalla en el DNS → **Verificar DNS**. La raíz sin `www`:
+   ALIAS/ANAME o redirección a `www`. Luego definir la variable `SITE_URL` (abajo) con el
+   dominio final y volver a desplegar.
+
+### Variables de build (GitHub)
+*Settings → Secrets and variables → Actions → Variables*:
+
+| Variable | Valor |
+|---|---|
+| `SITE_URL` | Dominio canónico final, ej. `https://www.welcomestudentsgroup.com.au` |
+| `PUBLIC_FORM_ENDPOINT` | Endpoint de formularios (ver más abajo) |
+
+Si no se definen, se usan los valores por defecto (`https://welcomestudentsgroup.com.au` y
+formularios en modo "contacto directo").
+
+### Particularidades de Toolyx
+- **Versiones:** cada publicación queda en *Versiones* y se puede republicar en un clic (rollback).
+- **Inyección automática:** al importar, Toolyx añade su píxel de atribución, livechat y botón de
+  WhatsApp. La CSP ya permite `https://os.toolyx.com` en `script-src` y `connect-src`, como
+  pide su documentación. **Revisar tras el primer publish** que no haya errores de CSP en la
+  consola y que no aparezcan dos botones de WhatsApp (si es así, desactivar uno de los dos).
+- **Cabeceras HTTP:** Toolyx no lee `public/_headers`; las cabeceras de seguridad dependen de
+  su plataforma. La CSP principal sigue activa porque va en un `<meta>` dentro del HTML.
+- **Carpetas ocultas:** Toolyx no publica carpetas que empiezan con punto, así que
+  `/.well-known/security.txt` no estará disponible en ese hosting.
+- **Límites de importación:** 200 archivos y 20 MB (el sitio usa ~45 archivos y < 1 MB).
+- **Medición:** *Web → Inicio* (PageSpeed, SEO, checklist), *Estadísticas*, *Embudos* y
+  *Campañas* funcionan con el píxel. Google Search Console y GA4 se conectan en *Web → Configuración*.
+
+### Formularios → CRM de Toolyx
+Opción recomendada: **webhook de entrada** (*Marketing → Captación → Formularios → Nuevo
+webhook*, eligiendo pipeline y etapa). Su URL se pone en la variable `PUBLIC_FORM_ENDPOINT`.
+Ojo: esa URL lleva una clave y queda visible en el HTML del sitio (cualquiera podría enviar
+leads falsos). Si aparece spam, eliminar el webhook, crear otro y sumar protección
+(por ejemplo, un pequeño proxy serverless con verificación anti-bots). Antes de dar por
+conectado, enviar un formulario de prueba y confirmar que el lead entra al CRM con nombre,
+email, teléfono, interés y mensaje.
+
+## Hostings alternativos
 
 ### Cloudflare Pages o Netlify (recomendado: lee `public/_headers` tal cual)
 - Comando de build: `npm run build` · Carpeta de salida: `dist` · Node: 22
