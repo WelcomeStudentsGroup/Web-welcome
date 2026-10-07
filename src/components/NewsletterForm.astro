@@ -1,0 +1,62 @@
+---
+import FormStatus from './FormStatus.astro';
+import { site } from '@/config/site';
+
+interface Props {
+  id: string;
+  compact?: boolean;
+}
+const { id, compact = false } = Astro.props;
+const endpoint = import.meta.env.PUBLIC_FORM_ENDPOINT || '';
+const fallback = `<a href="${site.contact.emailHref}">${site.contact.email}</a>.`;
+---
+
+<form
+  class:list={['newsletter', { 'newsletter--compact': compact }]}
+  id={id}
+  data-form="newsletter"
+  data-endpoint={endpoint}
+  data-success="You're subscribed — welcome aboard!"
+  data-fallback={fallback}
+  action={endpoint || undefined}
+  method="post"
+  novalidate
+>
+  <div class="newsletter-row">
+    <div class="field">
+      <label class="sr-only" for={`${id}-email`}>Email address</label>
+      <input id={`${id}-email`} type="email" name="email" placeholder="you@example.com" autocomplete="email" required />
+    </div>
+    <button class:list={['btn btn-primary', { 'btn-sm': compact }]} type="submit">
+      <span class="spinner" aria-hidden="true"></span><span>{compact ? 'Join' : 'Subscribe'}</span>
+    </button>
+  </div>
+  <div class="hp-field" aria-hidden="true">
+    <label for={`${id}-website`}>Leave this field empty</label>
+    <input id={`${id}-website`} name="_gotcha" tabindex="-1" autocomplete="off" />
+  </div>
+  <FormStatus />
+</form>
+
+<style>
+  .newsletter {
+    position: relative;
+  }
+  .newsletter-row {
+    display: flex;
+    gap: 8px;
+  }
+  .newsletter-row .field {
+    flex: 1;
+  }
+  .newsletter--compact input {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.25);
+    color: #fff;
+    padding: 10px 12px;
+  }
+  .newsletter--compact input::placeholder {
+    color: #a9cac6;
+  }
+</style>
+

@@ -1,0 +1,66 @@
+/* ============================================================
+   WELCOME STUDENTS GROUP — DESIGN TOKENS
+   Ver docs/02-marca-y-diseno.md para el porqué de cada decisión.
+   Tema claro único (sitio de marca pintado explícitamente).
+   Tipografía: Fraunces (display) + Plus Jakarta Sans (texto/UI),
+   alternativas libres a Archer + Gotham. Auto-hospedadas (sin Google Fonts).
+   ============================================================ */
+:root {
+  color-scheme: light;
+
+  /* --- Colores de marca --- */
+  --brand-orange: #eb7a25;
+  --brand-orange-dark: #c8631a;
+  /* Variantes del naranja para texto/botones con contraste WCAG AA */
+  --brand-orange-ink: #b8580f;
+  --brand-orange-ink-hover: #9c4a0c;
+  --brand-purple: #722679;
+  --brand-purple-dark: #591d5e;
+  --brand-teal: #033b39;
+  --brand-grey: #5d5c63;
+  --brand-white: #ffffff;
+
+  /* --- Tokens semánticos --- */
+  --bg: #faf7f2;
+  --bg-alt: #f2ece2;
+  --surface: #ffffff;
+  --ink: #211926;
+  --ink-soft: #5d5c63;
+  --ink-on-dark: #f6f1ea;
+  --ink-on-dark-soft: #cdbfd0;
+  --ink-on-teal-soft: #bcd6d3;
+  --line: rgba(33, 25, 38, 0.12);
+  --line-on-dark: rgba(246, 241, 234, 0.18);
+  --purple-tint: #f2e6f3;
+  --orange-tint: #fdeee0;
+  --focus: #1a73e8;
+  --success: #1f8a4c;
+  --success-bg: #e8f6ee;
+  --danger: #c62828;
+  --danger-bg: #fdf1f1;
+
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 24px;
+  --radius-pill: 999px;
+
+  --shadow-sm: 0 1px 2px rgba(33, 25, 38, 0.06), 0 1px 1px rgba(33, 25, 38, 0.04);
+  --shadow-md: 0 8px 24px -8px rgba(33, 25, 38, 0.18);
+  --shadow-lg: 0 24px 60px -20px rgba(33, 25, 38, 0.28);
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+  --space-9: 96px;
+
+  --font-display: 'Fraunces Variable', ui-serif, Georgia, 'Times New Roman', serif;
+  --font-body: 'Plus Jakarta Sans Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+
+  --container: 1220px;
+  --header-h: 84px;
+}

@@ -1,0 +1,78 @@
+---
+/**
+ * Ventana de reserva de consulta. Cualquier enlace con `data-open-booking` la abre.
+ * Sin JavaScript, esos enlaces llevan a /contact/ (mejora progresiva).
+ */
+import EnquiryForm from './EnquiryForm.astro';
+import Icon from './Icon.astro';
+import { site } from '@/config/site';
+---
+
+<dialog class="booking" id="bookingDialog" aria-labelledby="bookingTitle">
+  <button class="booking-close" type="button" data-close-booking aria-label="Close dialog">
+    <Icon name="close" size={18} strokeWidth={2} />
+  </button>
+  <h2 class="h3" id="bookingTitle">Book your free consultation</h2>
+  <p class="body-sm mt-2">Tell us a little about your goals — one of our advisers will contact you {site.contact.responseTime}.</p>
+  <EnquiryForm
+    id="bookingForm"
+    name="booking"
+    variant="booking"
+    class="mt-5"
+    submitLabel="Request my free consultation"
+    successMessage={`Thanks! Your request has been received — an adviser will contact you ${site.contact.responseTime}.`}
+  />
+</dialog>
+
+<style>
+  .booking {
+    border: none;
+    border-radius: var(--radius-lg);
+    max-width: 560px;
+    width: calc(100% - 32px);
+    max-height: 90vh;
+    padding: var(--space-6);
+    box-shadow: var(--shadow-lg);
+    color: var(--ink);
+  }
+  .booking::backdrop {
+    background: rgba(33, 25, 38, 0.55);
+  }
+  .booking-close {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid var(--line);
+    background: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .booking h2 {
+    padding-right: 48px;
+  }
+  @media (max-width: 560px) {
+    .booking {
+      padding: var(--space-5);
+    }
+  }
+</style>
+
+<script>
+  const dialog = document.getElementById('bookingDialog') as HTMLDialogElement | null;
+  if (dialog && typeof dialog.showModal === 'function') {
+    document.addEventListener('click', (e) => {
+      const trigger = (e.target as HTMLElement).closest('[data-open-booking]');
+      if (trigger) {
+        e.preventDefault();
+        dialog.showModal();
+        return;
+      }
+      if ((e.target as HTMLElement).closest('[data-close-booking]') || e.target === dialog) dialog.close();
+    });
+  }
+</script>

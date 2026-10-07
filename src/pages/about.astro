@@ -1,0 +1,126 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import ImagePlaceholder from '@/components/ImagePlaceholder.astro';
+import SectionHead from '@/components/SectionHead.astro';
+import EnquiryForm from '@/components/EnquiryForm.astro';
+import { site } from '@/config/site';
+import { reasons, values } from '@/data/content';
+---
+
+<BaseLayout
+  title="About Us — Purpose, Values & Accreditations"
+  description="Since 2015, Welcome Students Group has helped international students live, study and work in Australia. Meet our purpose, values and industry accreditations."
+  breadcrumbs={[{ name: 'About', href: '/about/' }]}
+  pageType="AboutPage"
+>
+  <section class="section section--tight-top">
+    <div class="container two-col">
+      <div class="reveal">
+        <span class="eyebrow">Brand purpose</span>
+        <h1 class="h2 mt-3">At Welcome, we work every day to improve the experience of international students.</h1>
+        <p class="lede mt-4">
+          Our purpose is to help fulfil dreams — supporting, accompanying, advising and pushing our students forward, so they
+          have everything they need to live, study and work abroad.
+        </p>
+      </div>
+      <ImagePlaceholder shape="wide" icon="people" class="reveal" photo="Team photo — Welcome Students Group advisers with a student in the Brisbane or Gold Coast office" />
+    </div>
+  </section>
+
+  <section class="section section--teal" aria-labelledby="values-title">
+    <div class="container">
+      <SectionHead center eyebrow="Brand values" id="values-title" title="What we stand for" />
+      <ul class="values-grid">
+        {
+          values.map((v) => (
+            <li class="value-card reveal">
+              <h3>{v.title}</h3>
+              <p>{v.text}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" id="why" aria-labelledby="why-title">
+    <div class="container">
+      <SectionHead eyebrow="Why Welcome" id="why-title" title="Seven reasons students choose us" />
+      <ol class="why-list">
+        {
+          reasons.map((r, i) => (
+            <li class="why-item reveal">
+              <span class="why-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+              <div>
+                <h3 class="h4">{r.title}</h3>
+                <p>{r.text}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="section section--alt" id="accreditations" aria-labelledby="cert-title">
+    <div class="container">
+      <SectionHead eyebrow="Certifications & accreditations" id="cert-title" title="Industry recognised" />
+      <ul class="chip-row">
+        {site.accreditations.map((a) => <li class="cert-chip">{a}</li>)}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="about-contact-title">
+    <div class="container two-col">
+      <div class="reveal">
+        <span class="eyebrow">Get in touch</span>
+        <h2 class="h2 mt-3" id="about-contact-title">Questions before you enquire?</h2>
+        <p class="lede mt-3">
+          Send a short message and an adviser will get back to you {site.contact.responseTime} — or see full contact details
+          on our <a href="/contact/" class="link-strong">Contact page</a>.
+        </p>
+      </div>
+      <div class="form-card reveal">
+        <EnquiryForm
+          id="aboutForm"
+          name="about-contact"
+          variant="short"
+          submitLabel="Send message"
+          successMessage={`Thanks for reaching out — we'll reply ${site.contact.responseTime}.`}
+        />
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .values-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-5);
+    list-style: none;
+  }
+  .value-card {
+    padding: var(--space-5) 0;
+    border-top: 2px solid var(--line-on-dark);
+  }
+  .value-card h3 {
+    font-size: 1.15rem;
+    margin-bottom: 6px;
+  }
+  .value-card p {
+    color: var(--ink-on-teal-soft);
+    font-size: 0.9rem;
+  }
+  @media (max-width: 860px) {
+    .values-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  @media (max-width: 560px) {
+    .values-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

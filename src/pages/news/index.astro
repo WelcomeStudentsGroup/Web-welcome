@@ -1,0 +1,114 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Icon from '@/components/Icon.astro';
+import SectionHead from '@/components/SectionHead.astro';
+import CtaBand from '@/components/CtaBand.astro';
+import NewsletterForm from '@/components/NewsletterForm.astro';
+import { site } from '@/config/site';
+import { formatDate, getPublishedNews } from '@/lib/news';
+
+const posts = await getPublishedNews();
+const resources = [
+  { title: 'Study in Australia — starter guide', text: 'Everything to plan your first steps: courses, cities, costs and timelines.' },
+  { title: 'Visa document checklist', text: 'The documents you will typically need to prepare for a student visa application.' },
+];
+---
+
+<BaseLayout
+  title="News, Guides & Careers"
+  description="News, study guides and visa updates for international students in Australia, plus free resources and career opportunities at Welcome Students Group."
+  breadcrumbs={[{ name: 'News', href: '/news/' }]}
+  pageType="CollectionPage"
+>
+  <section class="section section--tight-top">
+    <div class="container">
+      <SectionHead center level={1} eyebrow="News & resources" title="Stories, guides & open roles" />
+    </div>
+
+    <div class="container">
+      <h2 class="caption">Latest articles</h2>
+      {
+        posts.length > 0 ? (
+          <ul class="grid grid-3 mt-5">
+            {posts.map((post) => (
+              <li class="card card--hover news-card">
+                <span class="caption">
+                  {post.data.category} · <time datetime={post.data.publishDate.toISOString()}>{formatDate(post.data.publishDate)}</time>
+                </span>
+                <h3 class="h4">
+                  <a href={`/news/${post.id}/`} class="stretched">{post.data.title}</a>
+                </h3>
+                <p>{post.data.description}</p>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <div class="card empty mt-5">
+            <h3 class="h4">Our first articles are on their way</h3>
+            <p>
+              We're preparing guides on courses, cities and visa pathways. Subscribe below to get them first — or{' '}
+              <a href="/contact/" class="link-strong" data-open-booking>book a free consultation</a> if you have questions today.
+            </p>
+          </div>
+        )
+      }
+    </div>
+
+    <div class="container mt-7">
+      <h2 class="caption">Free resources</h2>
+      <ul class="grid grid-2 mt-5">
+        {
+          resources.map((r) => (
+            <li class="card">
+              <span class="icon-tile"><Icon name="download" size={22} /></span>
+              <h3 class="h4">{r.title}</h3>
+              <p>{r.text}</p>
+              <span class="tag">Coming soon</span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <div class="container mt-7" id="careers">
+      <h2 class="caption">Careers</h2>
+      <div class="card mt-5">
+        <h3 class="h4">Join our team in Brisbane or the Gold Coast</h3>
+        <p>
+          There are no open roles listed right now, but we're always happy to hear from people passionate about international
+          education. Send your CV to <a href={`${site.contact.emailHref}?subject=Careers`} class="link-strong">{site.contact.email}</a>.
+        </p>
+      </div>
+    </div>
+
+    <div class="container mt-7">
+      <CtaBand eyebrow="Newsletter" title="Get study & migration updates" lede="Scholarships, intake deadlines and visa policy changes — straight to your inbox.">
+        <div class="newsletter-wrap mt-5">
+          <NewsletterForm id="newsNewsletter" />
+        </div>
+      </CtaBand>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .news-card {
+    position: relative;
+  }
+  .stretched {
+    text-decoration: none;
+  }
+  .stretched::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+  .empty {
+    max-width: 760px;
+  }
+  .newsletter-wrap {
+    max-width: 440px;
+    margin-inline: auto;
+    text-align: left;
+  }
+</style>

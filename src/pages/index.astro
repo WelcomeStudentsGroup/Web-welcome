@@ -1,0 +1,377 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Icon from '@/components/Icon.astro';
+import ImagePlaceholder from '@/components/ImagePlaceholder.astro';
+import SectionHead from '@/components/SectionHead.astro';
+import Testimonials from '@/components/Testimonials.astro';
+import CtaBand from '@/components/CtaBand.astro';
+import { site } from '@/config/site';
+import { destinations, partners, pillars, processSteps, programs } from '@/data/content';
+import { offices } from '@/lib/schema';
+
+const base = Astro.site ?? Astro.url;
+const toneClass = { purple: 'tone-purple', orange: 'tone-orange', teal: 'tone-teal' } as const;
+---
+
+<BaseLayout
+  rawTitle
+  title="Welcome Students Group — Live, Study & Work in Australia"
+  description={site.description}
+  schema={offices(base)}
+>
+  <section class="hero">
+    <div class="container hero-grid">
+      <div class="hero-copy reveal">
+        <span class="eyebrow">Registered Education &amp; Migration Agency · Since {site.foundingYear}</span>
+        <h1 class="h1">Dare to live the experience: live, study &amp; work in Australia.</h1>
+        <p class="lede">
+          For 10+ years we've advised and accompanied students and skilled professionals through every step of the journey —
+          free educational advisory, representation of trusted institutions across Australia, New Zealand &amp; Dubai, and
+          expert migration guidance so you can build your future abroad.
+        </p>
+        <div class="cta-row">
+          <a href="/contact/" class="btn btn-primary" data-open-booking>Book your free consultation</a>
+          <a href="/services/#education" class="btn btn-secondary">Scholarships available</a>
+        </div>
+        <dl class="hero-stats">
+          <div><dt>Years guiding students abroad</dt><dd>10+</dd></div>
+          <div><dt>Destinations: Australia, NZ &amp; Dubai</dt><dd>3</dd></div>
+          <div><dt>Partner institutions</dt><dd>10+</dd></div>
+        </dl>
+      </div>
+      <div class="hero-media reveal">
+        <ImagePlaceholder shape="wide" photo="Two friends laughing in front of the Sydney Opera House and Harbour Bridge at golden hour (authentic lifestyle photo)" />
+        <div class="badge-card">
+          <span class="badge-dot"><Icon name="award" size={18} strokeWidth={2} /></span>
+          <div><b>QEAC · ICEF · English Australia</b><span>Certified &amp; accredited agency</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="wwd-title">
+    <div class="container">
+      <SectionHead
+        center
+        eyebrow="What we do"
+        id="wwd-title"
+        title="Three ways we accompany your journey"
+        lede="We guide your path in Australia. With 10 years in international education — and having lived the international-student experience ourselves — we understand the challenges and the opportunities."
+      />
+      <div class="grid grid-3">
+        {
+          pillars.map((p) => (
+            <article class="card card--hover reveal">
+              <span class:list={['pillar-icon', toneClass[p.tone]]}>
+                <Icon name={p.icon} size={28} />
+              </span>
+              <h3 class="h4">{p.title}</h3>
+              <p>{p.text}</p>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--teal" aria-labelledby="hwh-title">
+    <div class="container">
+      <SectionHead eyebrow="How we help" id="hwh-title" title="Your journey abroad, in six steps" />
+      <ol class="process">
+        {
+          processSteps.map((s, i) => (
+            <li class="process-step reveal">
+              <span class="num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+              <h3 class="h4">{s.title}</h3>
+              <p>{s.text}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="section section--alt" aria-labelledby="dest-title">
+    <div class="container">
+      <SectionHead eyebrow="Study destinations" id="dest-title" title="Where you could live, study & work">
+        <p class="lede">
+          We represent institutions across three destinations. Explore all of them on the{' '}
+          <a href="/destinations/" class="link-strong">Destinations</a> page.
+        </p>
+      </SectionHead>
+      <div class="grid grid-3">
+        {
+          destinations.map((d) => (
+            <article class="dest-card card--hover reveal">
+              <ImagePlaceholder shape="wide" flush icon="pin" photo={d.photo} />
+              <div class="dest-body">
+                <h3 class="h4">{d.name}</h3>
+                <ul class="check-list">
+                  {d.highlights.map((h) => <li>{h}</li>)}
+                </ul>
+                <a href={`/destinations/#${d.id}`} class="btn-ghost">
+                  Explore {d.name}
+                </a>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="study-offer" aria-labelledby="offer-title">
+    <div class="container">
+      <SectionHead eyebrow="Study offer" id="offer-title" title="Programs for every goal" />
+      <div class="grid grid-4">
+        {
+          programs.map((p) => (
+            <article class="card card--compact reveal">
+              <span class="tag">{p.tag}</span>
+              <h3 class="h4">{p.title}</h3>
+              <p>{p.text}</p>
+            </article>
+          ))
+        }
+      </div>
+      <h3 class="caption mt-7">Some of our partner institutions</h3>
+      <ul class="chip-row mt-4">
+        {partners.map((p) => <li class="chip">{p}</li>)}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section--purple" id="testimonials" aria-labelledby="testi-title">
+    <div class="container">
+      <SectionHead center eyebrow="Testimonials" id="testi-title" title="Stories from our students" />
+      <Testimonials />
+      <p class="body-sm center mt-4">Quotes shown as originally shared by our students.</p>
+      <dl class="stat-row">
+        <div><dt>Years of experience</dt><dd>10+</dd></div>
+        <div><dt>Partner institutions</dt><dd>10+</dd></div>
+        <div><dt>Study destinations</dt><dd>3</dd></div>
+        <div><dt>Industry accreditations</dt><dd>{site.accreditations.length}</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <CtaBand
+        title="Ready to start your journey?"
+        lede="Book a free, no-obligation consultation and let's map out your path to live, study and work abroad."
+      />
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero {
+    padding-block: var(--space-8) var(--space-9);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -160px;
+    right: -160px;
+    width: 520px;
+    height: 520px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, rgba(235, 122, 37, 0.22), transparent 65%);
+    pointer-events: none;
+  }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1.05fr 0.95fr;
+    gap: var(--space-8);
+    align-items: center;
+    position: relative;
+  }
+  .hero-copy .h1 {
+    margin-block: var(--space-4);
+  }
+  .hero-stats {
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    justify-content: start;
+    gap: var(--space-6);
+    margin: var(--space-8) 0 0;
+  }
+  @media (max-width: 420px) {
+    .hero-stats {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .hero-stats div,
+  .stat-row div {
+    display: flex;
+    flex-direction: column-reverse;
+  }
+  .hero-stats dd,
+  .stat-row dd {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 600;
+  }
+  .hero-stats dd {
+    font-size: 1.9rem;
+    color: var(--brand-purple);
+  }
+  .hero-stats dt {
+    font-size: 0.82rem;
+    color: var(--ink-soft);
+  }
+  .hero-media {
+    position: relative;
+  }
+  .badge-card {
+    position: absolute;
+    bottom: -22px;
+    left: -22px;
+    background: #fff;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+    padding: 16px 18px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    max-width: 250px;
+  }
+  .badge-card b {
+    display: block;
+    font-size: 0.9rem;
+  }
+  .badge-card span {
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+  }
+  .badge-card .badge-dot {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: var(--brand-orange-ink);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+  }
+  @media (max-width: 900px) {
+    .hero-grid {
+      grid-template-columns: 1fr;
+    }
+    .hero-media {
+      order: -1;
+    }
+    .badge-card {
+      position: static;
+      margin-top: var(--space-4);
+      max-width: none;
+    }
+  }
+
+  .pillar-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    margin-bottom: var(--space-2);
+  }
+  .tone-purple {
+    background: var(--brand-purple);
+  }
+  .tone-orange {
+    background: var(--brand-orange-ink);
+  }
+  .tone-teal {
+    background: var(--brand-teal);
+  }
+
+  .process {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-6) var(--space-5);
+    list-style: none;
+  }
+  .process-step {
+    position: relative;
+    padding-left: var(--space-7);
+  }
+  .process-step .num {
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.6rem;
+    color: var(--brand-orange);
+  }
+  .process-step h3 {
+    margin-bottom: 6px;
+  }
+  .process-step p {
+    color: var(--ink-on-teal-soft);
+  }
+  @media (max-width: 860px) {
+    .process {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  @media (max-width: 560px) {
+    .process {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .dest-card {
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    display: flex;
+    flex-direction: column;
+    transition:
+      transform 0.22s ease,
+      box-shadow 0.22s ease;
+  }
+  .dest-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-md);
+  }
+  .dest-body {
+    padding: var(--space-5);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1;
+  }
+  .dest-body .btn-ghost {
+    margin-top: auto;
+  }
+
+  .stat-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-5);
+    text-align: center;
+    margin: var(--space-7) 0 0;
+  }
+  .stat-row dd {
+    font-size: clamp(1.8rem, 3vw, 2.6rem);
+    color: #fff;
+  }
+  .stat-row dt {
+    font-size: 0.85rem;
+    color: var(--ink-on-dark-soft);
+  }
+  @media (max-width: 700px) {
+    .stat-row {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+</style>

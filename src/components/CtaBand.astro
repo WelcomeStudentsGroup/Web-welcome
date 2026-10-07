@@ -1,0 +1,25 @@
+---
+interface Props {
+  eyebrow?: string;
+  title: string;
+  lede?: string;
+  ctaLabel?: string;
+}
+const {
+  eyebrow = 'Ready when you are',
+  title,
+  lede,
+  ctaLabel = 'Book a free consultation',
+} = Astro.props;
+---
+
+<div class="cta-band reveal">
+  <span class="eyebrow">{eyebrow}</span>
+  <h2 class="h2">{title}</h2>
+  {lede && <p class="lede">{lede}</p>}
+  <slot>
+    <div class="cta-row cta-row--center">
+      <a href="/contact/" class="btn btn-primary" data-open-booking>{ctaLabel}</a>
+    </div>
+  </slot>
+</div>

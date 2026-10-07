@@ -1,0 +1,27 @@
+---
+/** Migas de pan visibles. El schema BreadcrumbList lo genera BaseLayout. */
+export interface Crumb {
+  name: string;
+  href: string;
+}
+interface Props {
+  items: Crumb[];
+}
+const { items } = Astro.props;
+---
+
+<nav class="breadcrumbs container" aria-label="Breadcrumb">
+  <ol>
+    {
+      items.map((c, i) =>
+        i === items.length - 1 ? (
+          <li aria-current="page">{c.name}</li>
+        ) : (
+          <li>
+            <a href={c.href}>{c.name}</a>
+          </li>
+        ),
+      )
+    }
+  </ol>
+</nav>

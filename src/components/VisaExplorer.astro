@@ -1,0 +1,179 @@
+---
+/**
+ * Explorador de visas: herramienta ORIENTATIVA de 2 pasos (no es asesoría migratoria).
+ * Las reglas viven en el script de abajo. Si en el futuro se conecta a un motor de
+ * elegibilidad real o a un CRM, este es el único archivo a modificar.
+ */
+const step1 = [
+  { value: 'student', label: 'Recent school graduate / student' },
+  { value: 'graduate', label: 'Graduating soon in Australia' },
+  { value: 'professional', label: 'Qualified professional' },
+  { value: 'partner', label: 'In a relationship with an AU/NZ citizen' },
+];
+const step2 = [
+  { value: 'beginner', label: 'Beginner / elementary' },
+  { value: 'intermediate', label: 'Intermediate' },
+  { value: 'advanced', label: 'Advanced / IELTS ready' },
+  { value: 'native', label: 'Fluent / native level' },
+];
+---
+
+<div class="calc reveal" id="visa-explorer">
+  <span class="eyebrow">Free tool</span>
+  <h3 class="h3 mt-2">Visa pathway explorer</h3>
+  <div class="calc-steps" aria-hidden="true"><span class="is-done"></span><span></span><span></span></div>
+
+  <fieldset class="calc-step" data-step="1">
+    <legend class="body-sm">1. What best describes you?</legend>
+    <div class="calc-options">
+      {step1.map((o) => <button type="button" class="calc-opt" data-value={o.value}>{o.label}</button>)}
+    </div>
+  </fieldset>
+
+  <fieldset class="calc-step" data-step="2" hidden>
+    <legend class="body-sm">2. What's your English level?</legend>
+    <div class="calc-options">
+      {step2.map((o) => <button type="button" class="calc-opt" data-value={o.value}>{o.label}</button>)}
+    </div>
+  </fieldset>
+
+  <div class="calc-result" id="calcResult" hidden aria-live="polite">
+    <span class="tag">Indicative pathway</span>
+    <h4 class="h4 mt-3">Your suggested next step</h4>
+    <p class="body-sm mt-2" id="calcResultBody"></p>
+    <div class="cta-row">
+      <a href="/contact/" class="btn btn-primary btn-sm" data-open-booking>Confirm with a migration adviser</a>
+      <button type="button" class="btn btn-secondary btn-sm" id="calcRestart">Start again</button>
+    </div>
+  </div>
+
+  <p class="calc-disclaimer">
+    This tool gives an indicative suggestion only and is not migration advice. Final eligibility is assessed by our
+    registered migration partners during a consultation.
+  </p>
+</div>
+
+<style>
+  .calc {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    padding: var(--space-6);
+  }
+  .calc-steps {
+    display: flex;
+    gap: 8px;
+    margin: var(--space-5) 0;
+  }
+  .calc-steps span {
+    height: 5px;
+    flex: 1;
+    border-radius: 3px;
+    background: var(--line);
+  }
+  .calc-steps :global(span.is-done) {
+    background: var(--brand-orange);
+  }
+  fieldset {
+    border: 0;
+    padding: 0;
+    margin: 0;
+  }
+  legend {
+    margin-bottom: var(--space-3);
+    padding: 0;
+  }
+  .calc-options {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+  .calc-opt {
+    border: 1.5px solid var(--line);
+    border-radius: var(--radius-md);
+    padding: 14px 16px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.92rem;
+    background: #fff;
+    text-align: left;
+    color: var(--ink);
+  }
+  .calc-opt:hover {
+    border-color: var(--brand-purple);
+  }
+  .calc-opt[aria-pressed='true'] {
+    border-color: var(--brand-orange);
+    background: #fdf1e6;
+  }
+  .calc-disclaimer {
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+    border-top: 1px dashed var(--line);
+    margin-top: var(--space-5);
+    padding-top: var(--space-4);
+  }
+  @media (max-width: 520px) {
+    .calc-options {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<script>
+  const MESSAGES: Record<string, string> = {
+    student: 'A Student visa pathway starting with an English or foundation program is usually the best first step for you.',
+    graduate:
+      'You may be able to explore a Graduate visa once you complete your qualifying course — worth confirming your course and visa conditions with us.',
+    professional:
+      'A Skills visa pathway is often the strongest option for qualified professionals, subject to a formal skills assessment.',
+    partner:
+      'A Partner visa may be the right pathway if your relationship meets the eligibility requirements — this always needs a full case review.',
+  };
+  const ENGLISH: Record<string, string> = {
+    beginner: " We'd suggest starting with an English program to meet future course or visa English requirements.",
+    intermediate: ' Your English level is a solid start — some courses or visas may still require a formal test.',
+    advanced: ' Your English level looks strong for most course and visa requirements.',
+    native: ' Your English level should comfortably meet most course and visa requirements.',
+  };
+
+  const root = document.getElementById('visa-explorer');
+  if (root) {
+    const dots = root.querySelectorAll('.calc-steps span');
+    const steps = root.querySelectorAll<HTMLFieldSetElement>('.calc-step');
+    const result = root.querySelector<HTMLElement>('#calcResult');
+    const body = root.querySelector<HTMLElement>('#calcResultBody');
+    const answers: Record<string, string> = {};
+
+    root.addEventListener('click', (e) => {
+      const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('.calc-opt');
+      if (!btn) return;
+      const step = btn.closest<HTMLFieldSetElement>('.calc-step');
+      if (!step) return;
+      step.querySelectorAll('.calc-opt').forEach((b) => b.setAttribute('aria-pressed', 'false'));
+      btn.setAttribute('aria-pressed', 'true');
+      answers[step.dataset.step ?? ''] = btn.dataset.value ?? '';
+
+      if (step.dataset.step === '1') {
+        step.hidden = true;
+        steps[1].hidden = false;
+        dots[1]?.classList.add('is-done');
+        steps[1].querySelector<HTMLButtonElement>('.calc-opt')?.focus();
+      } else if (result && body) {
+        dots[2]?.classList.add('is-done');
+        body.textContent =
+          (MESSAGES[answers['1']] ?? 'Book a free consultation so we can map out your best pathway.') +
+          (ENGLISH[answers['2']] ?? '');
+        result.hidden = false;
+      }
+    });
+
+    root.querySelector('#calcRestart')?.addEventListener('click', () => {
+      steps.forEach((s, i) => (s.hidden = i !== 0));
+      root.querySelectorAll('.calc-opt').forEach((b) => b.setAttribute('aria-pressed', 'false'));
+      dots.forEach((d, i) => d.classList.toggle('is-done', i === 0));
+      if (result) result.hidden = true;
+      steps[0].querySelector<HTMLButtonElement>('.calc-opt')?.focus();
+    });
+  }
+</script>

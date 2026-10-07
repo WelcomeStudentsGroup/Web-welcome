@@ -1,0 +1,163 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Icon from '@/components/Icon.astro';
+import SectionHead from '@/components/SectionHead.astro';
+import EnquiryForm from '@/components/EnquiryForm.astro';
+import { formatAddress, site, socialLinks } from '@/config/site';
+import { offices } from '@/lib/schema';
+
+const base = Astro.site ?? Astro.url;
+const mapsUrl = (q: string) => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`;
+---
+
+<BaseLayout
+  title="Contact Us — Brisbane & Gold Coast Offices"
+  description={`Talk to Welcome Students Group: phone ${site.contact.phone}, WhatsApp ${site.contact.whatsapp} or visit our Brisbane and Gold Coast offices. Free consultations.`}
+  breadcrumbs={[{ name: 'Contact', href: '/contact/' }]}
+  pageType="ContactPage"
+  schema={offices(base)}
+>
+  <section class="section section--tight-top">
+    <div class="container">
+      <SectionHead
+        center
+        level={1}
+        eyebrow="Contact"
+        title="Let's talk about your journey"
+        lede={`Reach us by phone, WhatsApp, email, or the form below — we usually reply ${site.contact.responseTime}.`}
+      />
+    </div>
+
+    <div class="container contact-grid">
+      <div class="contact-card reveal">
+        <ul class="contact-list">
+          {
+            site.offices.map((o) => (
+              <li class="contact-row" id={o.id}>
+                <span class="icon-tile">
+                  <Icon name="pin" size={20} />
+                </span>
+                <div>
+                  <h2>{o.name}</h2>
+                  <address>
+                    <a href={mapsUrl(`${site.name}, ${formatAddress(o)}`)} target="_blank" rel="noopener">
+                      {formatAddress(o)}
+                    </a>
+                  </address>
+                </div>
+              </li>
+            ))
+          }
+          <li class="contact-row">
+            <span class="icon-tile"><Icon name="phone" size={20} /></span>
+            <div><h2>Phone</h2><a href={site.contact.phoneHref}>{site.contact.phone}</a></div>
+          </li>
+          <li class="contact-row">
+            <span class="icon-tile"><Icon name="message" size={20} /></span>
+            <div>
+              <h2>WhatsApp</h2><a href={site.contact.whatsappHref} target="_blank" rel="noopener">{site.contact.whatsapp}</a>
+            </div>
+          </li>
+          <li class="contact-row">
+            <span class="icon-tile"><Icon name="mail" size={20} /></span>
+            <div><h2>Email</h2><a href={site.contact.emailHref}>{site.contact.email}</a></div>
+          </li>
+        </ul>
+        <div>
+          <p class="caption">Follow us</p>
+          {
+            socialLinks.length > 0 && (
+              <div class="social mt-3">
+                {socialLinks.map((s) => (
+                  <a href={s.url} aria-label={s.label} target="_blank" rel="noopener me">
+                    <Icon name={s.key} size={18} strokeWidth={1.8} />
+                  </a>
+                ))}
+              </div>
+            )
+          }
+          <p class="body-sm mt-3">{site.social.handle}</p>
+        </div>
+      </div>
+
+      <div class="form-card reveal" id="enquiry">
+        <h2 class="h3">Send us an enquiry</h2>
+        <EnquiryForm id="contactForm" name="contact" class="mt-5" />
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 0.85fr 1.15fr;
+    gap: var(--space-8);
+    align-items: start;
+  }
+  .contact-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    padding: var(--space-6);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+  .contact-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    list-style: none;
+  }
+  .contact-row {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+  .contact-row .icon-tile {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+  }
+  .contact-row h2 {
+    font-family: var(--font-body);
+    font-size: 0.92rem;
+    font-weight: 700;
+  }
+  .contact-row address {
+    font-style: normal;
+  }
+  .contact-row div {
+    min-width: 0;
+  }
+  .contact-row a {
+    overflow-wrap: anywhere;
+    color: var(--ink-soft);
+    font-size: 0.9rem;
+    text-decoration: none;
+  }
+  .contact-row a:hover {
+    color: var(--brand-purple);
+    text-decoration: underline;
+  }
+  .social {
+    display: flex;
+    gap: 10px;
+  }
+  .social a {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--bg-alt);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--brand-purple);
+  }
+  @media (max-width: 900px) {
+    .contact-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -1,0 +1,82 @@
+---
+import { render } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import CtaBand from '@/components/CtaBand.astro';
+import { site } from '@/config/site';
+import { orgId } from '@/lib/schema';
+import { formatDate, getPublishedNews } from '@/lib/news';
+
+export async function getStaticPaths() {
+  const posts = await getPublishedNews();
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+const base = Astro.site ?? Astro.url;
+const url = new URL(Astro.url.pathname, base).toString();
+
+const article = {
+  '@type': post.data.category === 'News' ? 'NewsArticle' : 'BlogPosting',
+  headline: post.data.title,
+  description: post.data.description,
+  datePublished: post.data.publishDate.toISOString(),
+  dateModified: (post.data.updatedDate ?? post.data.publishDate).toISOString(),
+  author: { '@type': 'Organization', name: post.data.author, url: new URL('/', base).toString() },
+  publisher: { '@id': orgId(base) },
+  mainEntityOfPage: url,
+  image: new URL('/og-default.png', base).toString(),
+  inLanguage: site.lang,
+};
+---
+
+<BaseLayout
+  title={post.data.title}
+  description={post.data.description}
+  ogType="article"
+  breadcrumbs={[
+    { name: 'News', href: '/news/' },
+    { name: post.data.title, href: `/news/${post.id}/` },
+  ]}
+  schema={[article]}
+>
+  <article class="section section--tight-top">
+    <div class="container prose">
+      <span class="eyebrow">{post.data.category}</span>
+      <h1 class="h2 mt-3">{post.data.title}</h1>
+      <p class="body-sm mt-3">
+        By {post.data.author} · <time datetime={post.data.publishDate.toISOString()}>{formatDate(post.data.publishDate)}</time>
+        {post.data.updatedDate && <> · Updated <time datetime={post.data.updatedDate.toISOString()}>{formatDate(post.data.updatedDate)}</time></>}
+      </p>
+      <div class="content mt-6">
+        <Content />
+      </div>
+    </div>
+    <div class="container mt-7">
+      <CtaBand title="Have questions about your pathway?" lede="Book a free, no-obligation consultation with one of our advisers." />
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .prose {
+    max-width: 760px;
+  }
+  .content :global(:is(h2, h3)) {
+    margin: var(--space-6) 0 var(--space-3);
+  }
+  .content :global(p),
+  .content :global(ul),
+  .content :global(ol) {
+    margin-bottom: var(--space-4);
+    font-size: 1.05rem;
+  }
+  .content :global(ul),
+  .content :global(ol) {
+    padding-left: 1.4em;
+  }
+  .content :global(a) {
+    color: var(--brand-purple);
+    font-weight: 600;
+  }
+</style>

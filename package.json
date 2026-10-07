@@ -1,0 +1,27 @@
+{
+  "name": "web-welcome",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Sitio web oficial de Welcome Students Group — agencia de educación y migración (Australia, Nueva Zelanda y Dubái).",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "verify": "astro check && astro build && node scripts/verify-build.mjs"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.4",
+    "@fontsource-variable/fraunces": "^5.3.0",
+    "@fontsource-variable/plus-jakarta-sans": "^5.3.0",
+    "astro": "^7.3.6"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "typescript": "^6.0.3"
+  }
+}

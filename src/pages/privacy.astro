@@ -1,0 +1,42 @@
+---
+/**
+ * BORRADOR — debe ser revisado y aprobado por un asesor legal antes de indexarse.
+ * Mientras tanto la página es noindex y queda fuera del sitemap.
+ */
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { site } from '@/config/site';
+---
+
+<BaseLayout
+  title="Privacy Policy"
+  description="How Welcome Students Group collects, uses and protects the personal information you share with us through this website."
+  breadcrumbs={[{ name: 'Privacy Policy', href: '/privacy/' }]}
+  noindex
+>
+  <section class="section section--tight-top">
+    <div class="container legal">
+      <h1 class="h2">Privacy Policy</h1>
+      <p class="body-sm mt-3">Draft — this policy is being finalised. For any privacy question, contact <a href={site.contact.emailHref} class="link-strong">{site.contact.email}</a>.</p>
+      <h2 class="h4">What we collect</h2>
+      <p>When you complete a form on this website we collect the details you provide, such as your name, email, phone number, program of interest and message.</p>
+      <h2 class="h4">How we use it</h2>
+      <p>We use this information only to respond to your enquiry, provide our education and migration advisory services, and — if you subscribe — send you updates. You can unsubscribe at any time.</p>
+      <h2 class="h4">Sharing</h2>
+      <p>We may share your details with the education institutions or registered migration partners involved in your application, only with your consent and for that purpose.</p>
+      <h2 class="h4">Contact</h2>
+      <p>To access, correct or delete your personal information, email <a href={site.contact.emailHref} class="link-strong">{site.contact.email}</a>.</p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .legal {
+    max-width: 760px;
+  }
+  .legal h2 {
+    margin: var(--space-6) 0 var(--space-2);
+  }
+  .legal p {
+    color: var(--ink-soft);
+  }
+</style>

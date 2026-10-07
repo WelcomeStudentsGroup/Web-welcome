@@ -1,0 +1,383 @@
+---
+import Logo from './Logo.astro';
+import Icon from './Icon.astro';
+import { nav, site } from '@/config/site';
+
+const current = Astro.url.pathname;
+const isCurrent = (href: string) => (href === '/' ? current === '/' : current.startsWith(href));
+
+/** Índice del buscador interno (enlaces a páginas y secciones). */
+const searchIndex = [
+  { label: 'Home — live, study & work abroad', href: '/' },
+  { label: 'Scholarships & study programs', href: '/#study-offer' },
+  { label: 'Testimonials & student stories', href: '/#testimonials' },
+  { label: 'About us — mission & brand values', href: '/about/' },
+  { label: 'Why choose Welcome Students Group', href: '/about/#why' },
+  { label: 'Certifications & accreditations', href: '/about/#accreditations' },
+  { label: 'Education advisory — English, VET, higher education', href: '/services/#education' },
+  { label: 'Migration & visas', href: '/services/#migration' },
+  { label: 'Visa pathway explorer tool', href: '/services/#visa-explorer' },
+  { label: 'WelcomeHub community & events', href: '/services/#welcomehub' },
+  { label: 'Frequently asked questions', href: '/services/#faq' },
+  { label: 'Destinations — Australia', href: '/destinations/#australia' },
+  { label: 'Destinations — New Zealand', href: '/destinations/#new-zealand' },
+  { label: 'Destinations — Dubai', href: '/destinations/#dubai' },
+  { label: 'Contact us & office locations', href: '/contact/' },
+  { label: 'Book a free consultation', href: '/contact/#enquiry' },
+  { label: 'News, blog & resources', href: '/news/' },
+  { label: 'Careers at Welcome Students Group', href: '/news/#careers' },
+];
+---
+
+<header class="site-header" id="siteHeader">
+  <div class="header-inner">
+    <Logo id="logoGradHeader" />
+    <nav class="main-nav" aria-label="Primary">
+      <ul>
+        {
+          nav.map((item) => (
+            <li>
+              <a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+    <div class="header-actions">
+      <button class="icon-btn" id="searchToggle" type="button" aria-expanded="false" aria-controls="searchPanel" aria-label="Search the site">
+        <Icon name="search" size={19} strokeWidth={2} />
+      </button>
+      <a href="/contact/" class="btn btn-primary btn-sm header-cta" data-open-booking>Book a Consultation</a>
+      <button class="icon-btn menu-toggle" id="menuOpen" type="button" aria-expanded="false" aria-controls="mobileMenu" aria-label="Open menu">
+        <Icon name="menu" size={19} strokeWidth={2} />
+      </button>
+    </div>
+  </div>
+
+  <div class="search-panel" id="searchPanel" hidden>
+    <form class="search-form" id="searchForm" role="search">
+      <label class="sr-only" for="searchInput">Search</label>
+      <input type="search" id="searchInput" placeholder="Search e.g. “visa”, “Australia”, “English”…" autocomplete="off" />
+    </form>
+    <div class="search-results" id="searchResults" aria-live="polite"></div>
+    <script type="application/json" id="searchIndex" set:html={JSON.stringify(searchIndex).replace(/</g, '\\u003c')} />
+  </div>
+</header>
+
+<div class="mobile-menu" id="mobileMenu" role="dialog" aria-modal="true" aria-label="Mobile navigation" hidden>
+  <div class="mobile-menu-top">
+    <span class="mobile-menu-title">Menu</span>
+    <button class="mobile-menu-close" id="menuClose" type="button" aria-label="Close menu">
+      <Icon name="close" size={20} strokeWidth={2} />
+    </button>
+  </div>
+  <nav aria-label="Mobile">
+    {
+      nav.map((item) => (
+        <a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>
+          {item.label}
+        </a>
+      ))
+    }
+  </nav>
+  <a href="/contact/" class="btn btn-primary mobile-menu-cta" data-open-booking>Book a Consultation</a>
+  <div class="mobile-menu-foot">
+    <a href={site.contact.phoneHref}>{site.contact.phone}</a>
+    <a href={site.contact.emailHref}>{site.contact.email}</a>
+  </div>
+</div>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 500;
+    background: rgba(250, 247, 242, 0.92);
+    backdrop-filter: saturate(160%) blur(10px);
+    border-bottom: 1px solid transparent;
+    transition:
+      box-shadow 0.25s ease,
+      border-color 0.25s ease;
+  }
+  .site-header:global(.is-scrolled) {
+    box-shadow: 0 2px 20px rgba(33, 25, 38, 0.08);
+    border-color: var(--line);
+  }
+  .header-inner {
+    max-width: var(--container);
+    margin-inline: auto;
+    padding-inline: var(--space-5);
+    height: var(--header-h);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-5);
+  }
+  .main-nav ul {
+    display: flex;
+    list-style: none;
+    gap: var(--space-5);
+  }
+  .main-nav a {
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.94rem;
+    padding: 8px 2px;
+    position: relative;
+  }
+  .main-nav a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 2px;
+    background: var(--brand-orange);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.2s ease;
+  }
+  .main-nav a:hover::after,
+  .main-nav a[aria-current='page']::after {
+    transform: scaleX(1);
+  }
+  .main-nav a[aria-current='page'] {
+    color: var(--brand-purple);
+  }
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+  .icon-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1px solid var(--line);
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--ink);
+    flex-shrink: 0;
+  }
+  .icon-btn:hover {
+    background: var(--bg-alt);
+  }
+  .menu-toggle {
+    display: none;
+  }
+  @media (max-width: 900px) {
+    .main-nav {
+      display: none;
+    }
+    .menu-toggle {
+      display: flex;
+    }
+    .header-cta {
+      display: none;
+    }
+  }
+  @media (max-width: 640px) {
+    .header-inner {
+      padding-inline: var(--space-4);
+    }
+  }
+
+  /* Buscador */
+  .search-panel {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #fff;
+    border-bottom: 1px solid var(--line);
+    box-shadow: 0 16px 40px rgba(33, 25, 38, 0.12);
+    padding: var(--space-5);
+  }
+  .search-form,
+  .search-results {
+    max-width: var(--container);
+    margin-inline: auto;
+  }
+  .search-results {
+    margin-top: var(--space-3);
+    display: grid;
+    gap: 6px;
+  }
+  .search-results :global(a) {
+    display: block;
+    padding: 10px 14px;
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    background: var(--bg-alt);
+    font-weight: 600;
+    font-size: 0.92rem;
+  }
+  .search-results :global(a:hover) {
+    background: #efe3d6;
+  }
+  .search-results :global(p) {
+    color: var(--ink-soft);
+    font-size: 0.9rem;
+  }
+
+  /* Menú móvil */
+  .mobile-menu {
+    position: fixed;
+    inset: 0;
+    z-index: 600;
+    background: var(--brand-purple);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+  }
+  .mobile-menu[hidden] {
+    display: none;
+  }
+  .mobile-menu-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-4) var(--space-5);
+  }
+  .mobile-menu-title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.2rem;
+  }
+  .mobile-menu-close {
+    background: rgba(255, 255, 255, 0.12);
+    border: none;
+    color: #fff;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .mobile-menu nav {
+    padding: var(--space-5);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: 1;
+  }
+  .mobile-menu nav a {
+    text-decoration: none;
+    color: #fff;
+    font-family: var(--font-display);
+    font-size: 1.7rem;
+    font-weight: 600;
+    padding: 14px 6px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+  }
+  .mobile-menu-cta {
+    margin: var(--space-5);
+  }
+  .mobile-menu-foot {
+    padding: var(--space-5);
+    font-size: 0.85rem;
+    color: #e6d4ea;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+</style>
+
+<script>
+  const header = document.getElementById('siteHeader');
+  const onScroll = () => header?.classList.toggle('is-scrolled', window.scrollY > 10);
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  // ----- Menú móvil -----
+  const menu = document.getElementById('mobileMenu');
+  const openBtn = document.getElementById('menuOpen');
+  const closeBtn = document.getElementById('menuClose');
+
+  const closeMenu = () => {
+    if (!menu || menu.hidden) return;
+    menu.hidden = true;
+    openBtn?.setAttribute('aria-expanded', 'false');
+    document.body.classList.remove('is-locked');
+    openBtn?.focus();
+  };
+  openBtn?.addEventListener('click', () => {
+    if (!menu) return;
+    menu.hidden = false;
+    openBtn.setAttribute('aria-expanded', 'true');
+    document.body.classList.add('is-locked');
+    menu.querySelector<HTMLElement>('nav a')?.focus();
+  });
+  closeBtn?.addEventListener('click', closeMenu);
+  menu?.addEventListener('click', (e) => {
+    if ((e.target as HTMLElement).closest('a')) closeMenu();
+  });
+
+  // ----- Buscador -----
+  const toggle = document.getElementById('searchToggle');
+  const panel = document.getElementById('searchPanel');
+  const input = document.getElementById('searchInput') as HTMLInputElement | null;
+  const results = document.getElementById('searchResults');
+  const form = document.getElementById('searchForm');
+  type Entry = { label: string; href: string };
+  const index: Entry[] = JSON.parse(document.getElementById('searchIndex')?.textContent || '[]');
+
+  const closeSearch = () => {
+    if (!panel || panel.hidden) return;
+    panel.hidden = true;
+    toggle?.setAttribute('aria-expanded', 'false');
+    if (input) input.value = '';
+    results?.replaceChildren();
+  };
+  toggle?.addEventListener('click', () => {
+    if (!panel) return;
+    if (panel.hidden) {
+      panel.hidden = false;
+      toggle.setAttribute('aria-expanded', 'true');
+      input?.focus();
+    } else {
+      closeSearch();
+    }
+  });
+
+  const render = (q: string) => {
+    if (!results) return;
+    results.replaceChildren();
+    if (!q) return;
+    const matches = index.filter((e) => e.label.toLowerCase().includes(q)).slice(0, 6);
+    if (!matches.length) {
+      const p = document.createElement('p');
+      p.textContent = 'No results — try “visa”, “Australia” or “English”.';
+      results.append(p);
+      return;
+    }
+    for (const m of matches) {
+      const a = document.createElement('a');
+      a.href = m.href;
+      a.textContent = m.label;
+      results.append(a);
+    }
+  };
+  input?.addEventListener('input', () => render(input.value.trim().toLowerCase()));
+  form?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    results?.querySelector<HTMLAnchorElement>('a')?.click();
+  });
+  results?.addEventListener('click', (e) => {
+    if ((e.target as HTMLElement).closest('a')) closeSearch();
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape') return;
+    closeMenu();
+    closeSearch();
+  });
+</script>

@@ -1,0 +1,119 @@
+---
+import { testimonials } from '@/data/content';
+---
+
+<div class="testi">
+  <ul class="testi-track" id="testiTrack" tabindex="0" aria-label="Student testimonials, scroll horizontally">
+    {
+      testimonials.map((t) => (
+        <li class="testi-card">
+          <span class="stars" aria-label="5 out of 5 stars">★★★★★</span>
+          <blockquote lang={t.lang}>
+            <p>“{t.quote}”</p>
+          </blockquote>
+          <div class="testi-who">
+            <span class="testi-avatar" aria-hidden="true" />
+            <div>
+              <b>{t.name}</b>
+              <span>{t.role}</span>
+            </div>
+          </div>
+        </li>
+      ))
+    }
+  </ul>
+  <div class="testi-nav">
+    <button type="button" data-testi="-1" aria-label="Previous testimonial">‹</button>
+    <button type="button" data-testi="1" aria-label="Next testimonial">›</button>
+  </div>
+</div>
+
+<style>
+  .testi-track {
+    display: flex;
+    gap: var(--space-5);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding-bottom: 8px;
+    scrollbar-width: none;
+    list-style: none;
+  }
+  .testi-track::-webkit-scrollbar {
+    display: none;
+  }
+  .testi-card {
+    scroll-snap-align: start;
+    flex: 0 0 min(380px, 86vw);
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    padding: var(--space-6);
+    border: 1px solid var(--line);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    color: var(--ink);
+  }
+  .stars {
+    color: var(--brand-orange-ink);
+    letter-spacing: 2px;
+    font-size: 0.95rem;
+  }
+  .testi-card p {
+    font-family: var(--font-display);
+    font-size: 1.08rem;
+    line-height: 1.5;
+  }
+  .testi-who {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: auto;
+  }
+  .testi-avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--brand-orange), var(--brand-purple));
+    flex-shrink: 0;
+  }
+  .testi-who b {
+    display: block;
+    font-size: 0.92rem;
+  }
+  .testi-who span {
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+  }
+  .testi-nav {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: var(--space-5);
+  }
+  .testi-nav button {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1px solid var(--line);
+    background: #fff;
+    cursor: pointer;
+    font-size: 1.3rem;
+    color: var(--ink);
+  }
+  .testi-nav button:hover {
+    background: var(--bg-alt);
+  }
+</style>
+
+<script>
+  const track = document.getElementById('testiTrack');
+  document.querySelectorAll<HTMLButtonElement>('[data-testi]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      if (!track) return;
+      const card = track.querySelector('.testi-card');
+      const step = card ? card.getBoundingClientRect().width + 24 : 320;
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      track.scrollBy({ left: Number(btn.dataset.testi) * step, behavior: reduce ? 'auto' : 'smooth' });
+    });
+  });
+</script>

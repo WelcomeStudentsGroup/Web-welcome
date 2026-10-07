@@ -1,0 +1,153 @@
+---
+import Logo from './Logo.astro';
+import Icon from './Icon.astro';
+import NewsletterForm from './NewsletterForm.astro';
+import { nav, site, socialLinks } from '@/config/site';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div class="footer-brand">
+      <Logo id="logoGradFooter" variant="dark" />
+      <p>{site.summary}</p>
+      {
+        socialLinks.length > 0 && (
+          <div class="social">
+            {socialLinks.map((s) => (
+              <a href={s.url} aria-label={s.label} target="_blank" rel="noopener me">
+                <Icon name={s.key} size={16} strokeWidth={1.8} />
+              </a>
+            ))}
+          </div>
+        )
+      }
+    </div>
+
+    <div class="footer-col">
+      <h2>Navigate</h2>
+      <ul>
+        {nav.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h2>Services</h2>
+      <ul>
+        <li><a href="/services/#education">Education</a></li>
+        <li><a href="/services/#migration">Migration</a></li>
+        <li><a href="/services/#welcomehub">WelcomeHub</a></li>
+        <li><a href="/news/#careers">Careers</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h2>Get in touch</h2>
+      <ul>
+        <li><a href={site.contact.phoneHref}>{site.contact.phone}</a></li>
+        <li><a href={site.contact.whatsappHref} target="_blank" rel="noopener">WhatsApp {site.contact.whatsapp}</a></li>
+        <li><a href={site.contact.emailHref}>{site.contact.email}</a></li>
+        <li><span>Brisbane &amp; Gold Coast, QLD</span></li>
+      </ul>
+      <p class="footer-label">Newsletter</p>
+      <NewsletterForm id="footerNewsletter" compact />
+    </div>
+  </div>
+
+  <div class="footer-bottom container">
+    <span>© {year} {site.legalName}. All rights reserved.</span>
+    <span><a href="/privacy/">Privacy Policy</a> · <a href="/terms/">Terms &amp; Conditions</a></span>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    background: var(--brand-teal);
+    color: #dceeec;
+    padding-block: var(--space-8) var(--space-5);
+  }
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr 1.3fr;
+    gap: var(--space-6);
+  }
+  .footer-brand p {
+    color: #a9cac6;
+    font-size: 0.88rem;
+    margin-top: var(--space-3);
+    max-width: 34ch;
+  }
+  .footer-col h2 {
+    color: #fff;
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: var(--space-4);
+  }
+  .footer-col ul {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    list-style: none;
+  }
+  .footer-col a,
+  .footer-col span {
+    color: #bcd6d3;
+    text-decoration: none;
+    font-size: 0.9rem;
+  }
+  .footer-col a:hover {
+    color: #fff;
+    text-decoration: underline;
+  }
+  .footer-label {
+    color: #a9cac6;
+    font-size: 0.85rem;
+    margin: var(--space-4) 0 6px;
+  }
+  .social {
+    display: flex;
+    gap: 10px;
+    margin-top: var(--space-4);
+  }
+  .social a {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+  }
+  .social a:hover {
+    background: var(--brand-orange-ink);
+  }
+  .footer-bottom {
+    margin-top: var(--space-7);
+    padding-top: var(--space-5);
+    border-top: 1px solid rgba(255, 255, 255, 0.14);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    font-size: 0.82rem;
+    color: #9dc0bc;
+  }
+  .footer-bottom a {
+    color: #9dc0bc;
+  }
+  @media (max-width: 900px) {
+    .footer-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  @media (max-width: 560px) {
+    .footer-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

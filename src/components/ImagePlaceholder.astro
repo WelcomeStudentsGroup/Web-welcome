@@ -1,0 +1,27 @@
+---
+/**
+ * Espacio reservado para una fotografía real.
+ * `photo` describe la foto que se necesita (también queda en data-photo-needed
+ * y en docs/07-pendientes.md). Reemplazar por <Image> de astro:assets con la foto
+ * real y un alt descriptivo cuando esté disponible.
+ */
+import Icon from './Icon.astro';
+import type { IconName } from '@/lib/icons';
+
+interface Props {
+  photo: string;
+  icon?: IconName;
+  shape?: 'portrait' | 'wide' | 'banner';
+  flush?: boolean;
+  class?: string;
+}
+const { photo, icon = 'image', shape = 'portrait', flush = false, class: className } = Astro.props;
+---
+
+<div
+  class:list={['img-ph', { 'img-ph--wide': shape === 'wide', 'img-ph--banner': shape === 'banner', 'img-ph--flush': flush }, className]}
+  data-photo-needed={photo}
+  aria-hidden="true"
+>
+  <Icon name={icon} strokeWidth={1.6} />
+</div>

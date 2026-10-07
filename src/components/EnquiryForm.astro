@@ -1,0 +1,106 @@
+---
+/**
+ * Formulario de consulta reutilizable.
+ * - variant "full": contacto completo (teléfono opcional, interés, consentimiento).
+ * - variant "short": nombre, email, mensaje.
+ * - variant "booking": reserva de consulta (teléfono requerido, mensaje opcional).
+ */
+import FormStatus from './FormStatus.astro';
+import { interestOptions } from '@/data/content';
+import { site } from '@/config/site';
+
+interface Props {
+  id: string;
+  name: string;
+  variant?: 'full' | 'short' | 'booking';
+  submitLabel?: string;
+  successMessage?: string;
+  class?: string;
+}
+const {
+  id,
+  name,
+  variant = 'full',
+  submitLabel = 'Send enquiry',
+  successMessage = `Thanks for your enquiry — we'll be in touch ${site.contact.responseTime}.`,
+  class: className,
+} = Astro.props;
+
+const endpoint = import.meta.env.PUBLIC_FORM_ENDPOINT || '';
+const fallback = `<a href="${site.contact.whatsappHref}" target="_blank" rel="noopener">WhatsApp ${site.contact.whatsapp}</a> or <a href="${site.contact.emailHref}">${site.contact.email}</a>.`;
+const f = (n: string) => `${id}-${n}`;
+---
+
+<form
+  class:list={['enquiry-form', className]}
+  id={id}
+  data-form={name}
+  data-endpoint={endpoint}
+  data-success={successMessage}
+  data-fallback={fallback}
+  action={endpoint || undefined}
+  method="post"
+  novalidate
+>
+  <div class="form-grid">
+    <div class="field">
+      <label for={f('name')}>Full name</label>
+      <input id={f('name')} name="name" autocomplete="name" required />
+      <span class="error-msg">Please enter your name.</span>
+    </div>
+    <div class="field">
+      <label for={f('email')}>Email</label>
+      <input id={f('email')} type="email" name="email" autocomplete="email" required />
+      <span class="error-msg">Please enter a valid email.</span>
+    </div>
+
+    {
+      variant !== 'short' && (
+        <div class="field">
+          <label for={f('phone')}>
+            Phone / WhatsApp {variant === 'full' && <span class="opt">(optional)</span>}
+          </label>
+          <input id={f('phone')} type="tel" name="phone" autocomplete="tel" required={variant === 'booking'} />
+          <span class="error-msg">Please enter a phone number.</span>
+        </div>
+      )
+    }
+    {
+      variant !== 'short' && (
+        <div class="field">
+          <label for={f('interest')}>{variant === 'booking' ? "I'm interested in" : 'Program of interest'}</label>
+          <select id={f('interest')} name="interest">
+            {interestOptions.map((o) => <option>{o}</option>)}
+          </select>
+        </div>
+      )
+    }
+
+    <div class="field field--full">
+      <label for={f('message')}>
+        Message {variant === 'booking' && <span class="opt">(optional)</span>}
+      </label>
+      <textarea id={f('message')} name="message" rows={variant === 'booking' ? 3 : 5} required={variant !== 'booking'}></textarea>
+      <span class="error-msg">Please write a short message.</span>
+    </div>
+
+    <div class="field field--full">
+      <label class="checkbox-row">
+        <input type="checkbox" name="consent" value="yes" required />
+        <span>I agree to be contacted by {site.name} about my enquiry, as described in the <a href="/privacy/">Privacy Policy</a>.</span>
+      </label>
+      <span class="error-msg">Please confirm to continue.</span>
+    </div>
+
+    <div class="hp-field" aria-hidden="true">
+      <label for={f('website')}>Leave this field empty</label>
+      <input id={f('website')} name="_gotcha" tabindex="-1" autocomplete="off" />
+    </div>
+  </div>
+
+  <button class="btn btn-primary btn-block mt-5" type="submit">
+    <span class="spinner" aria-hidden="true"></span><span>{submitLabel}</span>
+  </button>
+  <FormStatus />
+</form>
+

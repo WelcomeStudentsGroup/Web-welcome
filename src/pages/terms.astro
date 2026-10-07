@@ -1,0 +1,37 @@
+---
+/**
+ * BORRADOR — debe ser revisado y aprobado por un asesor legal antes de indexarse.
+ */
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { site } from '@/config/site';
+---
+
+<BaseLayout
+  title="Terms & Conditions"
+  description="Terms and conditions for using the Welcome Students Group website and its free tools and information."
+  breadcrumbs={[{ name: 'Terms & Conditions', href: '/terms/' }]}
+  noindex
+>
+  <section class="section section--tight-top">
+    <div class="container legal">
+      <h1 class="h2">Terms &amp; Conditions</h1>
+      <p class="body-sm mt-3">Draft — these terms are being finalised. Questions: <a href={site.contact.emailHref} class="link-strong">{site.contact.email}</a>.</p>
+      <h2 class="h4">Information on this website</h2>
+      <p>Content on this website is general information about studying and migrating abroad. It is not legal or migration advice for your individual circumstances.</p>
+      <h2 class="h4">Visa pathway explorer</h2>
+      <p>The visa pathway explorer provides an indicative suggestion only. Eligibility is assessed by registered migration agents during a consultation, and no visa outcome can be guaranteed.</p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .legal {
+    max-width: 760px;
+  }
+  .legal h2 {
+    margin: var(--space-6) 0 var(--space-2);
+  }
+  .legal p {
+    color: var(--ink-soft);
+  }
+</style>

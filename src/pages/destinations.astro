@@ -1,0 +1,78 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import ImagePlaceholder from '@/components/ImagePlaceholder.astro';
+import SectionHead from '@/components/SectionHead.astro';
+import { australianCities, destinations } from '@/data/content';
+
+const [australia, ...others] = destinations;
+---
+
+<BaseLayout
+  title="Study in Australia, New Zealand & Dubai"
+  description="Study, live and work in Australia (Brisbane, Gold Coast, Sydney, Melbourne and more), New Zealand or Dubai. Compare destinations with a free adviser."
+  breadcrumbs={[{ name: 'Destinations', href: '/destinations/' }]}
+>
+  <section class="section section--tight-top">
+    <div class="container">
+      <SectionHead center level={1} eyebrow="Destinations" title="Three places to live, study & work" />
+    </div>
+  </section>
+
+  <section class="section section--alt" id={australia.id}>
+    <div class="container">
+      <div class="two-col">
+        <ImagePlaceholder shape="wide" icon="pin" class="reveal" photo="Australian city skyline with harbour (hero city photo)" />
+        <div class="reveal">
+          <span class="eyebrow">{australia.level}</span>
+          <h2 class="h3 mt-2">{australia.name}</h2>
+          <p class="lede mt-3">{australia.summary}</p>
+        </div>
+      </div>
+      <h3 class="caption mt-7">Cities we work in</h3>
+      <ul class="grid grid-4 mt-4">
+        {
+          australianCities.map((c) => (
+            <li class="card card--compact reveal">
+              <h4 class="h4">{c.name}</h4>
+              <p>{c.text}</p>
+            </li>
+          ))
+        }
+      </ul>
+      <div class="cta-row mt-7">
+        <a href="/contact/" class="btn btn-primary" data-open-booking>Ask about Australia</a>
+      </div>
+    </div>
+  </section>
+
+  {
+    others.map((d, i) => (
+      <section class:list={['section', { 'section--alt': i % 2 === 1 }]} id={d.id}>
+        <div class="container two-col">
+          <div class:list={['reveal', { 'order-last': i % 2 === 1 }]}>
+            <span class="eyebrow">{d.level}</span>
+            <h2 class="h3 mt-2">{d.name}</h2>
+            <p class="lede mt-3">{d.summary}</p>
+            <ul class="check-list mt-5">
+              {d.highlights.map((h) => <li>{h}</li>)}
+            </ul>
+            <div class="cta-row">
+              <a href="/contact/" class="btn btn-secondary" data-open-booking>
+                Ask about {d.name}
+              </a>
+            </div>
+          </div>
+          <ImagePlaceholder shape="wide" icon="pin" class="reveal" photo={d.photo} />
+        </div>
+      </section>
+    ))
+  }
+</BaseLayout>
+
+<style>
+  @media (min-width: 901px) {
+    .order-last {
+      order: 2;
+    }
+  }
+</style>

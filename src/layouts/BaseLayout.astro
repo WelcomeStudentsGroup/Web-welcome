@@ -1,0 +1,122 @@
+---
+/**
+ * Layout base de TODAS las páginas: metadatos SEO, Open Graph, datos
+ * estructurados, fuentes, header, footer y elementos globales.
+ */
+import '@fontsource-variable/fraunces';
+import '@fontsource-variable/plus-jakarta-sans';
+import '@/styles/global.css';
+import frauncesLatin from '@fontsource-variable/fraunces/files/fraunces-latin-wght-normal.woff2?url';
+import jakartaLatin from '@fontsource-variable/plus-jakarta-sans/files/plus-jakarta-sans-latin-wght-normal.woff2?url';
+
+import Header from '@/components/Header.astro';
+import Footer from '@/components/Footer.astro';
+import BookingModal from '@/components/BookingModal.astro';
+import WhatsAppFloat from '@/components/WhatsAppFloat.astro';
+import Breadcrumbs, { type Crumb } from '@/components/Breadcrumbs.astro';
+import { site } from '@/config/site';
+import { breadcrumbs as breadcrumbSchema, organization, toJsonLd, webPage, website } from '@/lib/schema';
+
+interface Props {
+  /** Título de la página (sin el nombre de la marca; se agrega automáticamente). */
+  title: string;
+  /** Meta description: 140–160 caracteres, única por página. */
+  description: string;
+  /** Migas de pan (sin "Home"; se agrega sola). Omitir en la home. */
+  breadcrumbs?: Crumb[];
+  /** Nodos JSON-LD adicionales para esta página (FAQPage, Service, Article...). */
+  schema?: object[];
+  /** Tipo schema.org de la página (WebPage, AboutPage, ContactPage...). */
+  pageType?: string;
+  noindex?: boolean;
+  ogImage?: string;
+  ogType?: 'website' | 'article';
+  /** Si es true, el título no lleva el sufijo de marca (útil en la home). */
+  rawTitle?: boolean;
+}
+
+const {
+  title,
+  description,
+  breadcrumbs,
+  schema = [],
+  pageType,
+  noindex = false,
+  ogImage = '/og-default.png',
+  ogType = 'website',
+  rawTitle = false,
+} = Astro.props;
+
+const base = Astro.site ?? Astro.url;
+const canonical = new URL(Astro.url.pathname, base).toString();
+const fullTitle = rawTitle ? title : `${title} | ${site.name}`;
+const ogImageUrl = new URL(ogImage, base).toString();
+const crumbs: Crumb[] | undefined = breadcrumbs ? [{ name: 'Home', href: '/' }, ...breadcrumbs] : undefined;
+
+const graph = [
+  organization(base),
+  website(base),
+  webPage({ url: canonical, title: fullTitle, description, base, type: pageType }),
+  ...(crumbs ? [breadcrumbSchema(crumbs, base)] : []),
+  ...schema,
+];
+---
+
+<!doctype html>
+<html lang={site.lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="robots" content={noindex ? 'noindex, follow' : 'index, follow, max-image-preview:large, max-snippet:-1'} />
+    <meta name="theme-color" content="#722679" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <meta name="generator" content={Astro.generator} />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="alternate" type="text/plain" title="LLM summary" href="/llms.txt" />
+
+    <link rel="preload" href={frauncesLatin} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={jakartaLatin} as="font" type="font/woff2" crossorigin />
+
+    <!-- Open Graph / redes sociales -->
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:locale" content={site.locale} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={`${site.name} — ${site.tagline}`} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
+
+    <script type="application/ld+json" set:html={toJsonLd(graph)} />
+    <slot name="head" />
+  </head>
+  <body>
+    <a href="#main" class="skip-link">Skip to main content</a>
+    <Header />
+    <main id="main">
+      {crumbs && <Breadcrumbs items={crumbs} />}
+      <slot />
+    </main>
+    <Footer />
+    <WhatsAppFloat />
+    <BookingModal />
+    <script>
+      import { initForms } from '@/scripts/forms';
+      initForms();
+    </script>
+  </body>
+</html>

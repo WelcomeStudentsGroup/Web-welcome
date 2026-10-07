@@ -1,0 +1,153 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Icon from '@/components/Icon.astro';
+import ImagePlaceholder from '@/components/ImagePlaceholder.astro';
+import SectionHead from '@/components/SectionHead.astro';
+import VisaExplorer from '@/components/VisaExplorer.astro';
+import Faq from '@/components/Faq.astro';
+import { arrivalSupport, educationPrograms, faqs, hubEvents, supportItems, visas } from '@/data/content';
+import { faqPage, serviceCatalog } from '@/lib/schema';
+
+const base = Astro.site ?? Astro.url;
+const schema = [
+  serviceCatalog('Education advisory', educationPrograms, base),
+  serviceCatalog('Migration and visa guidance', visas, base),
+  faqPage(faqs),
+];
+---
+
+<BaseLayout
+  title="Education, Migration & Visa Services"
+  description="Free education advisory for English, VET and higher education in Australia, visa guidance with registered migration agents, and WelcomeHub community events."
+  breadcrumbs={[{ name: 'Services', href: '/services/' }]}
+  schema={schema}
+>
+  <section class="section section--tight-top">
+    <div class="container">
+      <SectionHead
+        center
+        level={1}
+        eyebrow="Services"
+        title="Everything you need, under one roof"
+        lede="Education advisory, migration guidance and a community that keeps supporting you after you land."
+      />
+    </div>
+
+    <div class="container two-col mt-6" id="education">
+      <div class="reveal">
+        <span class="icon-tile"><Icon name="cap" size={26} /></span>
+        <span class="eyebrow mt-3">01 · Education</span>
+        <h2 class="h3 mt-2">We help you choose the best educational program for your goals and budget.</h2>
+        <ul class="why-list why-list--single mt-5">
+          {
+            educationPrograms.map((p) => (
+              <li class="why-item">
+                <div>
+                  <h3 class="h4">{p.title}</h3>
+                  <p>{p.text}</p>
+                </div>
+              </li>
+            ))
+          }
+        </ul>
+        <div class="cta-row">
+          <a href="/contact/" class="btn btn-primary" data-open-booking>Talk to an education adviser</a>
+        </div>
+      </div>
+      <ImagePlaceholder icon="cap" class="reveal" photo="Student with a backpack smiling, campus in the background" />
+    </div>
+  </section>
+
+  <section class="section section--alt" id="migration">
+    <div class="container two-col">
+      <ImagePlaceholder icon="suitcase" class="reveal" photo="Traveller holding passport and boarding pass, suitcase beside them" />
+      <div class="reveal">
+        <span class="icon-tile icon-tile--purple"><Icon name="passport" size={26} /></span>
+        <span class="eyebrow mt-3">02 · Migration</span>
+        <h2 class="h3 mt-2">We work with expert lawyers and registered migration agents to find your best pathway.</h2>
+        <p class="lede mt-3">Adapted to your needs, so you can build your future in Australia with confidence.</p>
+      </div>
+    </div>
+    <div class="container mt-7">
+      <ul class="grid grid-4">
+        {
+          visas.map((v) => (
+            <li class="card card--hover reveal">
+              <span class="icon-tile">
+                <Icon name={v.icon} size={22} />
+              </span>
+              <h3 class="h4">{v.title}</h3>
+              <p>{v.text}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+    <div class="container mt-7">
+      <VisaExplorer />
+    </div>
+  </section>
+
+  <section class="section" id="welcomehub">
+    <div class="container two-col">
+      <div class="reveal">
+        <span class="icon-tile icon-tile--orange"><Icon name="hub" size={26} /></span>
+        <span class="eyebrow mt-3">03 · WelcomeHub</span>
+        <h2 class="h3 mt-2">Discover opportunities through events designed for you.</h2>
+        <p class="lede mt-3">
+          WelcomeHub is a space to learn, connect and grow professionally — a network of connections and alliances to help
+          push your career forward in Australia.
+        </p>
+        <ul class="grid grid--tight mt-5">
+          {
+            hubEvents.map((e) => (
+              <li class="card card--row">
+                <span class="icon-tile">
+                  <Icon name={e.icon} size={22} />
+                </span>
+                <p>{e.title}</p>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+      <ImagePlaceholder icon="people" class="reveal" photo="Three professionals smiling with thumbs up at a WelcomeHub networking event" />
+    </div>
+  </section>
+
+  <section class="section section--teal" aria-labelledby="support-title">
+    <div class="container">
+      <SectionHead eyebrow="Our support" id="support-title" title="What's included, start to finish" />
+      <ul class="grid grid-2">
+        {
+          supportItems.map((s) => (
+            <li class="card card--on-dark reveal">
+              <span class="icon-tile">
+                <Icon name={s.icon} size={22} />
+              </span>
+              <h3 class="h4">{s.title}</h3>
+              <p>{s.text}</p>
+            </li>
+          ))
+        }
+      </ul>
+      <h3 class="caption mt-7">Additional support once you land</h3>
+      <ul class="chip-row mt-3">
+        {arrivalSupport.map((a) => <li class="chip chip--on-dark">{a}</li>)}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" id="faq" aria-labelledby="faq-title">
+    <div class="container">
+      <SectionHead center eyebrow="FAQ" id="faq-title" title="Frequently asked questions" />
+      <Faq items={faqs} />
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .icon-tile + .eyebrow {
+    display: flex;
+  }
+</style>
