@@ -1,0 +1,1 @@
+var e=document.getElementById(`bookingDialog`);e&&typeof e.showModal==`function`&&document.addEventListener(`click`,t=>{t.target.closest(`[data-open-booking]`)?(t.preventDefault(),e.showModal()):(t.target.closest(`[data-close-booking]`)||t.target===e)&&e.close()});

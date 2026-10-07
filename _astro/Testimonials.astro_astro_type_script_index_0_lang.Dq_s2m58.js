@@ -1,0 +1,1 @@
+var e=document.getElementById(`testiTrack`);document.querySelectorAll(`[data-testi]`).forEach(t=>{t.addEventListener(`click`,()=>{if(!e)return;let n=e.querySelector(`.testi-card`),r=n?n.getBoundingClientRect().width+24:320,i=window.matchMedia(`(prefers-reduced-motion: reduce)`).matches;e.scrollBy({left:Number(t.dataset.testi)*r,behavior:i?`auto`:`smooth`})})});
