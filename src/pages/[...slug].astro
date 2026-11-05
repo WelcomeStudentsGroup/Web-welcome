@@ -1,0 +1,118 @@
+---
+/**
+ * Todas las páginas y artículos importados del WordPress, con sus URLs originales:
+ *   /                      portada (página "home")
+ *   /brisbane/, /blog/…    páginas
+ *   /blog/2/, /career/2/   paginación de los listados de artículos
+ *   /australian-business-number-abn/… artículos (en la raíz, como en WordPress)
+ */
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import WpContent from '@/components/WpContent.astro';
+import { blogPosting } from '@/lib/schema';
+import { hasH1, pages, posts, singleH1, templates, toIso, type WpPage, type WpPost } from '@/lib/wp';
+
+type Props = { kind: 'page'; page: WpPage; pageNum: number } | { kind: 'post'; post: WpPost };
+
+export function getStaticPaths() {
+  const out: { params: { slug: string | undefined }; props: Props }[] = [];
+  for (const page of pages) {
+    const slug = page.path === '/' ? undefined : page.path.replace(/^\/|\/$/g, '');
+    out.push({ params: { slug }, props: { kind: 'page', page, pageNum: 1 } });
+    // Páginas con listado paginado (widget de artículos de Elementor): /blog/2/, /career/2/…
+    const m = page.html.match(/<wsg-posts[^>]*per-page="(\d+)"[^>]*paginate="1"/);
+    if (m && slug) {
+      const total = Math.ceil(posts.length / Number(m[1]));
+      for (let n = 2; n <= total; n++) out.push({ params: { slug: `${slug}/${n}` }, props: { kind: 'page', page, pageNum: n } });
+    }
+  }
+  for (const post of posts) out.push({ params: { slug: post.slug }, props: { kind: 'post', post } });
+  return out;
+}
+
+const props = Astro.props as Props;
+const base = Astro.site ?? Astro.url;
+const url = new URL(Astro.url.pathname, base).toString();
+const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+
+let page: WpPage | undefined;
+let post: WpPost | undefined;
+let pageNum = 1;
+if (props.kind === 'page') {
+  page = props.page;
+  pageNum = props.pageNum;
+} else {
+  post = props.post;
+}
+
+/* ---------- Página ---------- */
+const pageHtml = page ? singleH1(page.html) : '';
+const pageTitle = page && pageNum > 1 ? `${page.title} – Página ${pageNum}` : (page?.title ?? '');
+const pageDocTitle = page && pageNum === 1 && page.documentTitle ? page.documentTitle : undefined;
+
+/* ---------- Artículo ---------- */
+const featured = post?.image
+  ? `<img src="${post.image.src}" alt="${esc(post.image.alt)}"${post.image.width ? ` width="${post.image.width}" height="${post.image.height}"` : ''} loading="eager" fetchpriority="high" decoding="async" class="attachment-full size-full">`
+  : '';
+const related = post ? posts.filter((p) => p.slug !== post.slug) : [];
+const postReplacements: Record<string, string> = post
+  ? {
+      '<wsg-post-title></wsg-post-title>': esc(post.title),
+      __WSG_CURRENT_URL__: post.path,
+      '<wsg-featured></wsg-featured>': featured,
+      '<wsg-post-content></wsg-post-content>': singleH1(post.html).replace(/<h1\b/g, '<h2').replace(/<\/h1>/g, '</h2>'),
+    }
+  : {};
+---
+
+{
+  page && (
+    <BaseLayout
+      title={pageTitle}
+      documentTitle={pageDocTitle}
+      description={page.description || page.title}
+      pageCss={[page.css]}
+      bodyClass={`${page.path === '/' ? 'home ' : ''}page-template-default page page-id-${page.id} elementor-page elementor-page-${page.id}`}
+      breadcrumbs={page.path === '/' ? undefined : [{ name: page.title, href: page.path }]}
+      noindex={pageNum > 1}
+      published={toIso(page.published)}
+      modified={toIso(page.modified)}
+    >
+      <div class={`elementor elementor-${page.id}`} data-elementor-type="wp-page">
+        {!hasH1(pageHtml) && <h1 class="elementor-screen-only">{page.title}</h1>}
+        {pageHtml ? (
+          <WpContent html={pageHtml} posts={posts} page={pageNum} baseUrl={page.path} />
+        ) : (
+          <section class="elementor-section elementor-top-section elementor-section-boxed wsg-empty-page">
+            <div class="elementor-container">
+              <p>Esta página no tiene contenido publicado.</p>
+            </div>
+          </section>
+        )}
+      </div>
+    </BaseLayout>
+  )
+}
+{
+  post && (
+    <BaseLayout
+      title={post.title}
+      description={post.description || post.title}
+      pageCss={[templates.single.css]}
+      bodyClass={`post-template-default single single-post postid-${post.id} single-format-standard elementor-template-full-width elementor-page-${templates.single.elementorId}`}
+      breadcrumbs={[
+        { name: 'Blog', href: '/blog/' },
+        { name: post.title, href: post.path },
+      ]}
+      ogType="article"
+      ogImage={post.image?.src}
+      pageType="ItemPage"
+      published={toIso(post.date)}
+      modified={toIso(post.modified)}
+      schema={[blogPosting({ url, title: post.title, description: post.description, published: toIso(post.date), modified: toIso(post.modified), image: post.image?.src, base })]}
+    >
+      <article class={`elementor elementor-${templates.single.elementorId} elementor-location-single post-${post.id} post type-post`} data-elementor-type="single-post">
+        <WpContent html={templates.single.html} posts={related} baseUrl={post.path} replacements={postReplacements} />
+      </article>
+    </BaseLayout>
+  )
+}

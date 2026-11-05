@@ -4,71 +4,66 @@
 Optimization*) = que los motores de IA (ChatGPT, Gemini, Perplexity, Claude, Google AI
 Overviews) entiendan, recomienden y **citen** a Welcome correctamente.
 
-## Implementado
+## Lo que se conserva del WordPress (lo que ya posiciona)
 
-### SEO técnico
-- HTML estático y rápido, URLs limpias con barra final, `lang="en-AU"`.
-- `<title>` y `meta description` únicos por página (validados por `npm run verify`).
-- `canonical` absoluto en cada página; `noindex` en páginas legales en borrador y en la 404.
-- `sitemap-index.xml` automático (`@astrojs/sitemap`), excluye noindex.
-- `robots.txt` generado, con referencia al sitemap.
-- Open Graph y Twitter Cards con imagen de 1200×630 (`public/og-default.png`).
-- Migas de pan visibles + schema `BreadcrumbList`.
-- Jerarquía de encabezados: un `<h1>` por página, `h2` por sección.
-- Enlazado interno entre páginas y anclas (`/services/#migration`, etc.).
-- Fuentes con preload, CSS cacheable y sin JS bloqueante (Core Web Vitals).
+- **Las mismas URLs** para las 30 páginas, los 16 artículos (en la raíz, `/<slug>/`), las
+  categorías (`/category/<slug>/`, con paginación `/page/2/`), los listados paginados
+  (`/blog/2/`, `/career/2/`) y los archivos mensuales (`/2023/05/`). No hacen falta
+  redirecciones 301.
+- **Los mismos `<title>`** (`Página – Welcome Students Group`; la portada conserva el
+  título largo de WordPress) y los mismos textos, encabezados e imágenes (con su `alt`).
+- El feed RSS (`/feed.xml`; WordPress lo servía en `/feed/`).
 
-### Datos estructurados (schema.org, JSON-LD, en `src/lib/schema.ts`)
-- `Organization` + `EducationalOrganization`: nombre, fundación, contacto, áreas,
-  `knowsAbout`, acreditaciones (`memberOf`), `sameAs` (redes, cuando se carguen).
-- `ProfessionalService` × 2 (Brisbane y Gold Coast) con dirección postal → SEO local.
-- `WebSite`, `WebPage` (`AboutPage`, `ContactPage`, `CollectionPage`).
-- `FAQPage` (Services), `Service` + `OfferCatalog` (educación y visas).
-- `BlogPosting` / `NewsArticle` en cada artículo.
+## Lo que mejora respecto al WordPress
+
+- `meta description` en todas las páginas (WordPress no tenía ninguna): se genera a partir
+  del primer texto de cada página o artículo. Puede afinarse a mano en el campo
+  `description` de cada JSON.
+- `canonical` absoluto, Open Graph y Twitter Cards (con la imagen destacada en los artículos).
+- `sitemap-index.xml` (el de WordPress estaba roto: redirigía a la portada) y `robots.txt`.
+- Un solo `<h1>` por página (las páginas de Elementor que tenían varios o ninguno se
+  normalizan: el primero se conserva y el resto pasan a `<h2>` con el mismo estilo; si no
+  había, se añade uno oculto con el título).
+- Datos estructurados schema.org en JSON-LD (`src/lib/schema.ts`): `Organization` +
+  `EducationalOrganization`, `ProfessionalService` × 2 oficinas, `WebSite` con `SearchAction`,
+  `WebPage`, `BreadcrumbList` y `BlogPosting` en los artículos.
+- `lang="es"`, HTML estático, fuentes auto-hospedadas con preload, imágenes WebP con
+  dimensiones (Core Web Vitals).
+- Las páginas de paginación, archivos mensuales y la búsqueda llevan `noindex` y no van al sitemap.
+
+### GEO
+- **`/llms.txt`**: resumen factual en Markdown (empresa, datos clave, páginas y artículos con
+  su descripción), generado desde el contenido.
+- **Rastreadores de IA permitidos** en `robots.txt`.
+- **Consistencia de datos (NAP):** nombre, dirección y teléfono idénticos en el footer, en
+  el schema y en `llms.txt`.
 
 Validar con: https://search.google.com/test/rich-results y https://validator.schema.org
 
-### GEO
-- **`/llms.txt`**: resumen factual en Markdown (empresa, datos clave, páginas,
-  servicios, FAQ, artículos), generado desde los mismos datos del sitio.
-- **Rastreadores de IA permitidos** en `robots.txt` (GPTBot, ClaudeBot, PerplexityBot,
-  Google-Extended…).
-- **Consistencia de datos (NAP):** nombre, dirección y teléfono idénticos en todo el sitio y
-  en el schema, gracias a la fuente única `src/config/site.ts`.
-- **Contenido "citable":** FAQ con respuestas directas, hechos concretos (desde 2015, 2
-  oficinas, 5 acreditaciones, 10 instituciones socias) y lenguaje claro.
+## Pendiente de verificar tras el cambio de DNS
+
+1. Google Search Console y Bing Webmaster Tools: enviar `/sitemap-index.xml` y comprobar que
+   no aparezcan errores de cobertura en las URLs que ya estaban indexadas.
+2. Si en Search Console figuran URLs que no existen aquí (p. ej. `/?p=123`, `/feed/`,
+   `/author/…`, adjuntos de imágenes), añadir redirecciones en el hosting.
+3. Google Business Profile de las dos oficinas con los datos de `src/config/site.ts`.
 
 ## Próximos pasos recomendados (por impacto)
 
-1. **Google Search Console y Bing Webmaster Tools:** verificar el dominio y enviar el
-   sitemap. Bing alimenta a ChatGPT/Copilot.
-2. **Google Business Profile** para cada oficina, con los datos **exactamente iguales** a
-   `src/config/site.ts`, y pedir reseñas a los estudiantes.
-3. **Redes sociales:** cargar las URLs en `site.social` para activar `sameAs` (refuerza la
-   entidad en el Knowledge Graph y en los LLM).
-4. **Fotos reales** optimizadas (ver `docs/03-arquitectura.md`): mejoran la conversión y el
-   SEO de imágenes.
-5. **Contenido para búsquedas reales** (un artículo por intención), por ejemplo: "student
-   visa Australia requirements", "study English in Brisbane cost", "VET courses Gold Coast",
-   "work and holiday visa Australia from Colombia/Chile/Argentina". Estructura: respuesta
-   directa en el primer párrafo, subtítulos en forma de pregunta, datos con fecha, enlaces a
-   fuentes oficiales (immi.homeaffairs.gov.au), y CTA a la consulta.
-6. **Versión en español** (`/es/`) con `hreflang`: gran parte del público busca en español.
-7. **Páginas de destino por ciudad y por visa** (`/study-in-brisbane/`, `/student-visa/`…)
-   para capturar búsquedas long-tail.
-8. **Analítica respetuosa con la privacidad** (Plausible, Umami o GA4 con consentimiento),
-   actualizando la CSP. Medir conversiones: reservas, clics en WhatsApp y formularios.
-9. **Menciones y enlaces externos:** directorios de agencias acreditadas (QEAC, ICEF,
-   English Australia), instituciones socias y medios latinos en Australia. Los LLM se apoyan
-   mucho en menciones de terceros.
+1. Revisar las `description` generadas de las páginas principales y escribir una a mano
+   (120–160 caracteres, con beneficio y llamado a la acción).
+2. Decidir si se añade analítica (el WordPress tenía Google Tag Manager y HubSpot; ver
+   `docs/07-pendientes.md`) y medir conversiones: formulario del CRM, WhatsApp, newsletter.
+3. Contenido nuevo para búsquedas reales ("visa de estudiante Australia requisitos",
+   "estudiar inglés en Brisbane precio"…) como artículos del blog.
+4. Menciones y enlaces externos (directorios QEAC, ICEF, English Australia; instituciones
+   socias).
 
 ## Checklist por página nueva
 
-- [ ] Título ≤ 50 caracteres (más la marca) con la palabra clave principal.
-- [ ] Description de 120–160 caracteres, única, con beneficio y llamado a la acción.
-- [ ] Un `<h1>`, `h2` descriptivos y preguntas reales como subtítulos.
-- [ ] Primer párrafo que responde directamente la intención de búsqueda.
+- [ ] Título con la palabra clave principal (el sufijo "– Welcome Students Group" se añade solo).
+- [ ] Description de 120–160 caracteres, única.
+- [ ] Un `<h1>`, `h2` descriptivos.
 - [ ] Enlaces internos hacia y desde páginas relacionadas.
-- [ ] Imágenes con `alt` descriptivo.
-- [ ] Schema adicional si corresponde (FAQPage, Service, Article…).
+- [ ] Imágenes con `alt` descriptivo, en WebP y con dimensiones.
 - [ ] `npm run verify` en verde.

@@ -42,7 +42,7 @@ async function resolveInternal(href) {
 const files = await walk(DIST);
 const pages = files.filter((f) => f.endsWith('.html'));
 
-for (const required of ['robots.txt', 'sitemap-index.xml', 'llms.txt', 'favicon.svg', 'og-default.png', '_headers']) {
+for (const required of ['robots.txt', 'sitemap-index.xml', 'llms.txt', 'favicon.ico', 'og-default.png', '_headers', 'feed.xml', 'search-index.json']) {
   if (!(await exists(join(DIST, required)))) errors.push(`Falta dist/${required}`);
 }
 

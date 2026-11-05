@@ -1,89 +1,110 @@
 ---
 /**
- * Layout base de TODAS las páginas: metadatos SEO, Open Graph, datos
- * estructurados, fuentes, header, footer y elementos globales.
+ * Layout base de TODAS las páginas: metadatos SEO, Open Graph, datos estructurados,
+ * fuentes auto-hospedadas, CSS importado del WordPress, header, footer y WhatsApp.
  */
-import '@fontsource-variable/fraunces';
-import '@fontsource-variable/plus-jakarta-sans';
-import '@/styles/global.css';
-import frauncesLatin from '@fontsource-variable/fraunces/files/fraunces-latin-wght-normal.woff2?url';
-import jakartaLatin from '@fontsource-variable/plus-jakarta-sans/files/plus-jakarta-sans-latin-wght-normal.woff2?url';
+import '@fontsource-variable/roboto';
+import '@fontsource-variable/roboto-slab';
+import '@fontsource-variable/montserrat';
+import '@fontsource-variable/raleway';
+import '@fontsource/slabo-13px';
+import '@fontsource/slabo-27px';
+import '@fontsource/antic-slab';
+import '@/styles/wp/vendor.css';
+import '@/styles/wp/fontawesome.css';
+import '@/styles/wp/generated.css';
+import '@/styles/site.css';
+import robotoLatin from '@fontsource-variable/roboto/files/roboto-latin-wght-normal.woff2?url';
+import robotoSlabLatin from '@fontsource-variable/roboto-slab/files/roboto-slab-latin-wght-normal.woff2?url';
+import montserratLatin from '@fontsource-variable/montserrat/files/montserrat-latin-wght-normal.woff2?url';
 
 import Header from '@/components/Header.astro';
 import Footer from '@/components/Footer.astro';
-import BookingModal from '@/components/BookingModal.astro';
 import WhatsAppFloat from '@/components/WhatsAppFloat.astro';
-import Breadcrumbs, { type Crumb } from '@/components/Breadcrumbs.astro';
 import { site } from '@/config/site';
-import { breadcrumbs as breadcrumbSchema, organization, toJsonLd, webPage, website } from '@/lib/schema';
+import { breadcrumbs as breadcrumbSchema, offices, organization, toJsonLd, webPage, website } from '@/lib/schema';
 
 interface Props {
-  /** Título de la página (sin el nombre de la marca; se agrega automáticamente). */
+  /** Título de la página (sin la marca; se agrega "– Welcome Students Group"). */
   title: string;
-  /** Meta description: 140–160 caracteres, única por página. */
+  /** Si se indica, se usa tal cual como <title> (p. ej. el que tenía WordPress). */
+  documentTitle?: string;
+  /** Meta description única por página. */
   description: string;
-  /** Migas de pan (sin "Home"; se agrega sola). Omitir en la home. */
-  breadcrumbs?: Crumb[];
-  /** Nodos JSON-LD adicionales para esta página (FAQPage, Service, Article...). */
+  /** Hojas de estilo específicas de la página (rutas en public/, generadas por el importador). */
+  pageCss?: (string | null | undefined)[];
+  /** Clases del <body> (WordPress/Elementor las usan en su CSS). */
+  bodyClass?: string;
+  /** Migas de pan para el schema BreadcrumbList (sin "Inicio"). */
+  breadcrumbs?: { name: string; href: string }[];
   schema?: object[];
-  /** Tipo schema.org de la página (WebPage, AboutPage, ContactPage...). */
   pageType?: string;
   noindex?: boolean;
   ogImage?: string;
   ogType?: 'website' | 'article';
-  /** Si es true, el título no lleva el sufijo de marca (útil en la home). */
-  rawTitle?: boolean;
+  published?: string;
+  modified?: string;
 }
 
 const {
   title,
+  documentTitle,
   description,
+  pageCss = [],
+  bodyClass = '',
   breadcrumbs,
   schema = [],
   pageType,
   noindex = false,
   ogImage = '/og-default.png',
   ogType = 'website',
-  rawTitle = false,
+  published,
+  modified,
 } = Astro.props;
 
 const base = Astro.site ?? Astro.url;
 const canonical = new URL(Astro.url.pathname, base).toString();
-const fullTitle = rawTitle ? title : `${title} | ${site.name}`;
+const fullTitle = documentTitle ?? `${title} – ${site.name}`;
 const ogImageUrl = new URL(ogImage, base).toString();
-const crumbs: Crumb[] | undefined = breadcrumbs ? [{ name: 'Home', href: '/' }, ...breadcrumbs] : undefined;
+const crumbs = breadcrumbs ? [{ name: 'Inicio', href: '/' }, ...breadcrumbs] : undefined;
 
 const graph = [
   organization(base),
+  ...offices(base),
   website(base),
-  webPage({ url: canonical, title: fullTitle, description, base, type: pageType }),
+  webPage({ url: canonical, title: fullTitle, description, base, type: pageType, published, modified }),
   ...(crumbs ? [breadcrumbSchema(crumbs, base)] : []),
   ...schema,
 ];
+const cssLinks = pageCss.filter((c): c is string => !!c);
 ---
 
 <!doctype html>
 <html lang={site.lang}>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
     <meta name="robots" content={noindex ? 'noindex, follow' : 'index, follow, max-image-preview:large, max-snippet:-1'} />
-    <meta name="theme-color" content="#722679" />
+    <meta name="theme-color" content="#7c1e7d" />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
     <meta name="generator" content={Astro.generator} />
 
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
     <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
     <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="alternate" type="application/rss+xml" title={`${site.name} » Feed`} href="/feed.xml" />
     <link rel="alternate" type="text/plain" title="LLM summary" href="/llms.txt" />
 
-    <link rel="preload" href={frauncesLatin} as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href={jakartaLatin} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={robotoLatin} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={robotoSlabLatin} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={montserratLatin} as="font" type="font/woff2" crossorigin />
+    {cssLinks.map((href) => <link rel="stylesheet" href={href} />)}
+    <link rel="stylesheet" href="/wp-css/custom.css" />
 
     <!-- Open Graph / redes sociales -->
     <meta property="og:type" content={ogType} />
@@ -104,19 +125,17 @@ const graph = [
     <script type="application/ld+json" set:html={toJsonLd(graph)} />
     <slot name="head" />
   </head>
-  <body>
-    <a href="#main" class="skip-link">Skip to main content</a>
+  <body class={`wp-theme-jagonzalez elementor-default elementor-kit-5 ${bodyClass}`.trim()}>
+    <a href="#main" class="skip-link">Ir al contenido</a>
     <Header />
-    <main id="main">
-      {crumbs && <Breadcrumbs items={crumbs} />}
+    <main id="main" class="wsg-main">
       <slot />
     </main>
     <Footer />
     <WhatsAppFloat />
-    <BookingModal />
     <script>
-      import { initForms } from '@/scripts/forms';
-      initForms();
+      import { initSite } from '@/scripts/wp/index';
+      initSite();
     </script>
   </body>
 </html>

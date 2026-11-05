@@ -1,0 +1,77 @@
+---
+/**
+ * Listado de artículos con el mismo marcado que el widget "Posts" (skin Classic) de
+ * Elementor Pro, para que apliquen las hojas de estilo importadas.
+ */
+import { excerptOf, formatDate, toIso, type WpPost } from '@/lib/wp';
+
+interface Props {
+  posts: WpPost[];
+  page?: number;
+  baseUrl?: string;
+  perPage?: number;
+  excerptWords?: number;
+  readMore?: string;
+  avatar?: boolean;
+  paginate?: boolean;
+}
+
+const { posts, page = 1, baseUrl = '/blog/', perPage = 9, excerptWords = 25, readMore = 'LEER MÁS »', avatar = false, paginate = true } = Astro.props;
+
+const total = Math.max(1, Math.ceil(posts.length / perPage));
+const current = Math.min(Math.max(1, page), total);
+const slice = posts.slice((current - 1) * perPage, current * perPage);
+const pageUrl = (n: number) => (n === 1 ? baseUrl : `${baseUrl}${baseUrl.startsWith('/category/') ? 'page/' : ''}${n}/`);
+---
+
+<div class="elementor-posts-container elementor-posts elementor-posts--skin-classic elementor-grid elementor-has-item-ratio">
+  {
+    slice.map((p) => (
+      <article class={`elementor-post elementor-grid-item post-${p.id} post type-post status-publish format-standard hentry ${p.image ? 'has-post-thumbnail ' : ''}${p.categories.map((c) => `category-${c}`).join(' ')}`}>
+        {p.image && (
+          <a class="elementor-post__thumbnail__link" href={p.path} tabindex="-1" aria-hidden="true">
+            <div class="elementor-post__thumbnail">
+              <img src={p.image.src} alt={p.image.alt} width={p.image.width ?? undefined} height={p.image.height ?? undefined} loading="lazy" decoding="async" />
+            </div>
+          </a>
+        )}
+        <div class="elementor-post__text">
+          <h3 class="elementor-post__title">
+            <a href={p.path}>{p.title}</a>
+          </h3>
+          <div class="elementor-post__meta-data">
+            <span class="elementor-post-date"><time datetime={toIso(p.date)}>{formatDate(p.date)}</time></span>{avatar && <Fragment>{' '}<span class="elementor-post-avatar">No hay comentarios</span></Fragment>}
+          </div>
+          <div class="elementor-post__excerpt">
+            <p>{excerptOf(p, excerptWords)}</p>
+          </div>
+          <div class="elementor-post__read-more-wrapper">
+            <a class="elementor-post__read-more" href={p.path}>
+              {readMore}
+            </a>
+          </div>
+        </div>
+      </article>
+    ))
+  }
+  {slice.length === 0 && <p class="elementor-posts-nothing-found">No se encontraron artículos.</p>}
+</div>
+{
+  paginate && total > 1 && (
+    <nav class="elementor-pagination" aria-label="Paginación">
+      {Array.from({ length: total }, (_, i) => i + 1).map((n) =>
+        n === current ? (
+          <span aria-current="page" class="page-numbers current">
+            <span class="elementor-screen-only">Page</span>
+            {n}
+          </span>
+        ) : (
+          <a class="page-numbers" href={pageUrl(n)}>
+            <span class="elementor-screen-only">Page</span>
+            {n}
+          </a>
+        ),
+      )}
+    </nav>
+  )
+}

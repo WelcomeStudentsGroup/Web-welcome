@@ -1,0 +1,44 @@
+---
+/**
+ * Archivos mensuales de WordPress (/2023/05/): un listado por cada mes con artículos.
+ * Se mantienen porque existían (y pueden estar indexados), con noindex.
+ */
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import WpContent from '@/components/WpContent.astro';
+import { posts, templates, type WpPost } from '@/lib/wp';
+
+export function getStaticPaths() {
+  const groups = new Map<string, WpPost[]>();
+  for (const p of posts) {
+    const key = p.date.slice(0, 7); // AAAA-MM
+    groups.set(key, [...(groups.get(key) ?? []), p]);
+  }
+  const out: { params: { year: string; month: string; page: string | undefined }; props: { list: WpPost[]; pageNum: number; year: string; month: string } }[] = [];
+  for (const [key, list] of groups) {
+    const [year, month] = key.split('-');
+    const total = Math.max(1, Math.ceil(list.length / 10));
+    out.push({ params: { year, month, page: undefined }, props: { list, pageNum: 1, year, month } });
+    for (let n = 2; n <= total; n++) out.push({ params: { year, month, page: `page/${n}` }, props: { list, pageNum: n, year, month } });
+  }
+  return out;
+}
+
+const { list, pageNum, year, month } = Astro.props;
+const baseUrl = `/${year}/${month}/`;
+// WordPress mostraba el mes en minúsculas ("mayo 2023"), tanto en la miga de pan como en el título.
+const title = `${new Date(Number(year), Number(month) - 1, 1).toLocaleDateString('es', { month: 'long' })} ${year}`;
+---
+
+<BaseLayout
+  title={pageNum > 1 ? `${title} – Página ${pageNum}` : title}
+  description={`Artículos publicados en ${title} en el blog de Welcome Students Group: consejos para estudiar, vivir y trabajar en Australia.`}
+  pageCss={[templates.archive.css]}
+  bodyClass={`archive date elementor-page-${templates.archive.elementorId} elementor-template-full-width`}
+  pageType="CollectionPage"
+  noindex
+>
+  <div class={`elementor elementor-${templates.archive.elementorId} elementor-location-archive`} data-elementor-type="archive">
+    <h1 class="elementor-screen-only">{title}</h1>
+    <WpContent html={templates.archive.html} posts={list} page={pageNum} baseUrl={baseUrl} replacements={{ '<wsg-post-title></wsg-post-title>': title, __WSG_CURRENT_URL__: baseUrl }} />
+  </div>
+</BaseLayout>

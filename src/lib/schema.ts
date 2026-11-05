@@ -23,7 +23,7 @@ export function organization(base: URL | string) {
     description: site.description,
     foundingDate: String(site.foundingYear),
     email: site.contact.email,
-    telephone: site.contact.phone.replace(/\s/g, ''),
+    telephone: '+61421273080',
     areaServed: ['Australia', 'New Zealand', 'United Arab Emirates'],
     knowsAbout: [
       'International education',
@@ -40,23 +40,23 @@ export function organization(base: URL | string) {
       {
         '@type': 'ContactPoint',
         contactType: 'customer service',
-        telephone: site.contact.phone.replace(/\s/g, ''),
+        telephone: '+61421273080',
         email: site.contact.email,
-        availableLanguage: ['English', 'Spanish'],
+        availableLanguage: ['Spanish', 'English'],
       },
     ],
-    department: site.offices.map((o) => ({ '@id': abs(`/contact/#${o.id}`, base) })),
+    department: site.offices.map((o) => ({ '@id': abs(`/contacto/#${o.id}`, base) })),
   };
 }
 
 export function offices(base: URL | string) {
   return site.offices.map((o) => ({
     '@type': 'ProfessionalService',
-    '@id': abs(`/contact/#${o.id}`, base),
-    name: `${site.name} — ${o.name.replace(' office', '')}`,
-    url: abs('/contact/', base),
+    '@id': abs(`/contacto/#${o.id}`, base),
+    name: `${site.name} — ${o.name}`,
+    url: abs('/contacto/', base),
     image: abs('/og-default.png', base),
-    telephone: site.contact.phone.replace(/\s/g, ''),
+    telephone: '+61421273080',
     email: site.contact.email,
     parentOrganization: { '@id': orgId(base) },
     address: {
@@ -76,13 +76,18 @@ export function website(base: URL | string) {
     '@id': websiteId(base),
     url: abs('/', base),
     name: site.name,
-    description: site.description,
+    description: site.wpTagline,
     inLanguage: site.lang,
     publisher: { '@id': orgId(base) },
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: { '@type': 'EntryPoint', urlTemplate: abs('/buscar/?s={search_term_string}', base) },
+      'query-input': 'required name=search_term_string',
+    },
   };
 }
 
-export function webPage(opts: { url: string; title: string; description: string; base: URL | string; type?: string }) {
+export function webPage(opts: { url: string; title: string; description: string; base: URL | string; type?: string; modified?: string; published?: string }) {
   return {
     '@type': opts.type ?? 'WebPage',
     '@id': `${opts.url}#webpage`,
@@ -92,6 +97,8 @@ export function webPage(opts: { url: string; title: string; description: string;
     inLanguage: site.lang,
     isPartOf: { '@id': websiteId(opts.base) },
     about: { '@id': orgId(opts.base) },
+    ...(opts.published ? { datePublished: opts.published } : {}),
+    ...(opts.modified ? { dateModified: opts.modified } : {}),
   };
 }
 
@@ -107,31 +114,18 @@ export function breadcrumbs(items: { name: string; href: string }[], base: URL |
   };
 }
 
-export function faqPage(items: { q: string; a: string }[]) {
+export function blogPosting(opts: { url: string; title: string; description: string; published: string; modified: string; image?: string; base: URL | string }) {
   return {
-    '@type': 'FAQPage',
-    mainEntity: items.map((i) => ({
-      '@type': 'Question',
-      name: i.q,
-      acceptedAnswer: { '@type': 'Answer', text: i.a },
-    })),
-  };
-}
-
-export function serviceCatalog(name: string, services: { title: string; text: string }[], base: URL | string) {
-  return {
-    '@type': 'Service',
-    name,
-    provider: { '@id': orgId(base) },
-    areaServed: 'Australia',
-    hasOfferCatalog: {
-      '@type': 'OfferCatalog',
-      name,
-      itemListElement: services.map((s) => ({
-        '@type': 'Offer',
-        itemOffered: { '@type': 'Service', name: s.title, description: s.text },
-      })),
-    },
+    '@type': 'BlogPosting',
+    headline: opts.title,
+    description: opts.description,
+    datePublished: opts.published,
+    dateModified: opts.modified,
+    author: { '@type': 'Organization', name: site.name, url: abs('/', opts.base) },
+    publisher: { '@id': orgId(opts.base) },
+    mainEntityOfPage: opts.url,
+    image: opts.image ? abs(opts.image, opts.base) : abs('/og-default.png', opts.base),
+    inLanguage: site.lang,
   };
 }
 
