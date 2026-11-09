@@ -7,59 +7,47 @@
 - **Desde:** 2015 (más de 10 años de trayectoria).
 - **Oficinas:** Brisbane (Level 18, 324 Queen St, Brisbane City QLD 4000) y Gold Coast
   (Level 9, Wyndham Building, 1 Corporate Ct, Bundall QLD 4217).
-- **Contacto:** +61 421 273 080 · WhatsApp +61 404 315 695 · info@welcomestudentsgroup.com.au
-- **Acreditaciones:** QEAC, ISEAA, ICEF, English Australia, Australia Future Unlimited.
-- **Destinos:** Australia (principal), Nueva Zelanda y Dubái (secundarios).
+- **Contacto:** (+61) 421 273 080 · WhatsApp +61 404 315 695 · info@welcomestudentsgroup.com.au
+- **Redes:** Facebook, Instagram, TikTok, LinkedIn y YouTube (URLs en `src/config/site.ts`).
+- **Certificaciones:** QEAC, ISEAA, ICEF, English Australia, Australia Future Unlimited.
+- **Destinos:** Australia (principal), Nueva Zelanda y Dubái.
+- **Dominio:** welcomestudentsgroup.com (el sitio original en WordPress).
+- **CRM:** los formularios de contacto son del sistema de la agencia
+  (`access.welcomestudentsgroup.com`, formularios "Form Website" en español e inglés).
 
-> Estos datos viven en `src/config/site.ts`. Si cambian, se cambian **solo allí**.
+> Estos datos salen del sitio original y viven en `src/config/site.ts` (metadatos, JSON-LD,
+> llms.txt) y en `src/content/wp/layout.json` (footer visible). Si cambian, se cambian en ambos.
 
-## Propósito y valores
+## Propósito y valores (según la página "Nosotros")
 
 **Propósito:** ayudar a cumplir sueños: apoyar, acompañar, asesorar e impulsar a los
 estudiantes para que tengan todo lo necesario para vivir, estudiar y trabajar en el exterior.
 
-**Valores:** Confianza, Pasión, Comunidad, Personalización, Integridad, Creer (en el
-potencial de cada estudiante).
+**Valores:** Confianza, Pasión, Comunidad, Personalización, Integridad, Fe.
 
 ## Público
 
 1. **Estudiantes internacionales** (mayoría latinoamericanos, hispanohablantes) que
    quieren estudiar inglés, un curso vocacional (VET) o educación superior en Australia.
-2. **Profesionales calificados** que buscan una vía migratoria (visa de habilidades,
-   empleador, pareja, etc.).
+2. **Profesionales calificados** que buscan una vía migratoria.
 3. **Personas ya en Australia** que buscan extender su estadía con un camino de estudio.
 
-## Servicios
+## Servicios (según el sitio)
 
-1. **Educación (asesoría gratuita):** inglés general/de negocios/académico y preparación
-   de IELTS, Cambridge y TOEFL; VET (certificados, diplomas, diplomas avanzados);
-   pregrado, maestría y doctorado. Las instituciones pagan la comisión al matricularse.
-2. **Migración:** con abogados y agentes migratorios registrados: visas de graduado,
-   trabajo, habilidades, pareja, Work & Holiday, turista, familia, y cancelaciones y
-   apelaciones.
-3. **WelcomeHub (comunidad):** seminarios de migración, ferias educativas y networking.
-4. **Soporte a la llegada:** recogida en el aeropuerto, guía de alojamiento, plan de
-   teléfono, cuenta bancaria, CV y permiso de trabajo, TFN/ABN.
-
-Instituciones socias destacadas: TAFE Queensland, Southern Cross University, Griffith
-University, Langports, Impact English College, Lexis English, Kaplan Business School,
-Shafston College, Greenwich College, ILSC Education Group.
+1. **Educación (asesoría gratuita):** cursos de inglés, vocacionales (VET), educación
+   superior y cursos con opciones migratorias; programa vacacional VET.
+2. **Migración:** en alianza con Condor Migration (abogados y agentes migratorios registrados).
+3. **Welcome Friends (comunidad):** recogida en el aeropuerto, tour por la ciudad, cuenta de
+   banco, plan de telefonía, transporte, hoja de vida y permisos laborales, eventos.
+4. **Contenido descargable:** guía de viaje y cotizaciones (PDF).
 
 ## Tono de voz
 
-- Cercano, cálido y optimista ("Dare to live the experience").
-- Honesto: **nunca prometer resultados de visa** ("No agency can guarantee a visa outcome").
-- Experto pero simple: explicar procesos en pasos claros.
-- Orientado a la acción: cada sección lleva a reservar una consulta gratuita o a WhatsApp.
-
-## Restricciones de comunicación
-
-- Las herramientas (como el explorador de visas) son **orientativas** y deben decir que no
-  son asesoría migratoria.
-- La asesoría migratoria la dan agentes registrados; la web no debe sugerir otra cosa.
-- No publicar testimonios, cifras o logros que el equipo no haya confirmado.
+- Cercano, cálido y optimista, en español ("¿Te gustaría Vivir, Estudiar y Trabajar en el Exterior?").
+- Honesto: no prometer resultados de visa.
+- Orientado a la acción: cada sección lleva al formulario de contacto o a WhatsApp.
 
 ## Origen del contenido
 
-El contenido inicial proviene del prototipo aprobado por la empresa (artifact
-"Welcome Students Group" en claude.ai, octubre 2026), que a su vez se basó en el brief de marca.
+Todo el contenido público proviene del sitio WordPress original, importado en noviembre
+de 2026 con `scripts/wp-import/`. Los textos no se reescribieron ni se "mejoraron".

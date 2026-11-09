@@ -2,17 +2,18 @@
 import BaseLayout from '@/layouts/BaseLayout.astro';
 ---
 
-<BaseLayout title="Page not found" description="The page you were looking for doesn't exist. Explore our study and migration services or contact our team." noindex>
-  <section class="section">
-    <div class="container center">
-      <span class="eyebrow">Error 404</span>
-      <h1 class="h2 mt-3">We couldn't find that page</h1>
-      <p class="lede mx-auto mt-3">It may have moved. Try one of these instead:</p>
-      <div class="cta-row cta-row--center">
-        <a href="/" class="btn btn-primary">Go to home</a>
-        <a href="/services/" class="btn btn-secondary">Our services</a>
-        <a href="/contact/" class="btn btn-secondary">Contact us</a>
+<BaseLayout title="Página no encontrada" description="La página que buscas no existe o cambió de dirección. Vuelve al inicio de Welcome Students Group o usa el menú para encontrar lo que necesitas." noindex>
+  <div class="elementor wsg-404">
+    <section class="elementor-section elementor-top-section elementor-section-boxed">
+      <div class="elementor-container">
+        <div class="wsg-404__inner">
+          <h1 class="elementor-heading-title">Página no encontrada</h1>
+          <p>La página que buscas no existe o cambió de dirección.</p>
+          <div class="elementor-button-wrapper">
+            <a class="elementor-button elementor-button-link elementor-size-md" href="/"><span class="elementor-button-content-wrapper"><span class="elementor-button-text">Volver al inicio</span></span></a>
+          </div>
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
+  </div>
 </BaseLayout>

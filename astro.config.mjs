@@ -6,7 +6,7 @@ import { loadEnv } from 'vite';
 // Dominio de producción. Cámbialo aquí (o con SITE_URL) si el dominio cambia:
 // se usa para canonical, sitemap, Open Graph y datos estructurados.
 const env = loadEnv(process.env.NODE_ENV ?? 'production', process.cwd(), '');
-const SITE_URL = env.SITE_URL || 'https://welcomestudentsgroup.com.au';
+const SITE_URL = env.SITE_URL || 'https://welcomestudentsgroup.com';
 
 // Endpoint opcional para formularios (Formspree, Web3Forms, API propia...).
 // Su origen se agrega a la CSP para permitir el envío.
@@ -38,8 +38,8 @@ export default defineConfig({
   },
   integrations: [
     sitemap({
-      // Las páginas legales en borrador y la 404 no se indexan.
-      filter: (page) => !/\/(privacy|terms|404)\/?$/.test(page),
+      // La búsqueda, la 404 y las páginas de paginación (noindex) no van al sitemap.
+      filter: (page) => !/\/(buscar|404)\/?$/.test(page) && !/\/(blog|career)\/\d+\/$/.test(page) && !/\/page\/\d+\/$/.test(page) && !/\/\d{4}\/\d{2}\/$/.test(page),
     }),
   ],
   security: {
@@ -52,6 +52,9 @@ export default defineConfig({
         "default-src 'self'",
         "img-src 'self' data:",
         "font-src 'self'",
+        // Formulario de contacto del CRM de la agencia (iframe en su propio subdominio) y
+        // videos de YouTube (se cargan solo al pulsar "reproducir").
+        "frame-src https://access.welcomestudentsgroup.com https://www.youtube-nocookie.com",
         `connect-src 'self' https://os.toolyx.com${formOrigin ? ' ' + formOrigin : ''}`,
         `form-action 'self'${formOrigin ? ' ' + formOrigin : ''}`,
         "base-uri 'self'",

@@ -1,0 +1,363 @@
+{
+  "source": "https://welcomestudentsgroup.com",
+  "whatsapp": {
+    "phone": "61404315695",
+    "text": "¡Hola Welcome! Quiero que me llamen, por favor."
+  },
+  "categories": [
+    {
+      "id": 14,
+      "slug": "bares",
+      "name": "Bares",
+      "count": 1,
+      "description": ""
+    },
+    {
+      "id": 12,
+      "slug": "economia",
+      "name": "Economía",
+      "count": 5,
+      "description": ""
+    },
+    {
+      "id": 11,
+      "slug": "estilo-de-vida",
+      "name": "Estilo de Vida",
+      "count": 5,
+      "description": ""
+    },
+    {
+      "id": 1,
+      "slug": "social",
+      "name": "Social",
+      "count": 15,
+      "description": ""
+    }
+  ],
+  "pages": [
+    {
+      "id": 6295,
+      "slug": "nueva-zelanda",
+      "path": "/nueva-zelanda/",
+      "title": "Nueva Zelanda",
+      "modified": "2026-03-27T05:55:07"
+    },
+    {
+      "id": 6244,
+      "slug": "dubai",
+      "path": "/dubai/",
+      "title": "Dubái",
+      "modified": "2026-03-27T05:53:35"
+    },
+    {
+      "id": 6238,
+      "slug": "destinos",
+      "path": "/destinos/",
+      "title": "Destinos",
+      "modified": "2026-03-27T01:00:34"
+    },
+    {
+      "id": 6088,
+      "slug": "career",
+      "path": "/career/",
+      "title": "Career",
+      "modified": "2024-08-14T22:01:37"
+    },
+    {
+      "id": 5395,
+      "slug": "blog",
+      "path": "/blog/",
+      "title": "Blog",
+      "modified": "2026-03-27T05:59:29"
+    },
+    {
+      "id": 4622,
+      "slug": "cursos-migratorios",
+      "path": "/cursos-migratorios/",
+      "title": "Cursos Migratorios",
+      "modified": "2026-03-27T05:06:11"
+    },
+    {
+      "id": 4415,
+      "slug": "vocacionales",
+      "path": "/vocacionales/",
+      "title": "Vocacionales",
+      "modified": "2026-03-27T04:59:22"
+    },
+    {
+      "id": 4401,
+      "slug": "cursos-de-ingles",
+      "path": "/cursos-de-ingles/",
+      "title": "Cursos de Inglés",
+      "modified": "2026-03-27T04:42:44"
+    },
+    {
+      "id": 4326,
+      "slug": "programa-vacacional-vet",
+      "path": "/programa-vacacional-vet/",
+      "title": "Programa Vacacional VET",
+      "modified": "2024-07-12T16:35:06"
+    },
+    {
+      "id": 4088,
+      "slug": "hobart",
+      "path": "/hobart/",
+      "title": "Hobart",
+      "modified": "2024-08-14T21:49:47"
+    },
+    {
+      "id": 4080,
+      "slug": "adelaide",
+      "path": "/adelaide/",
+      "title": "Adelaide",
+      "modified": "2025-11-01T09:28:25"
+    },
+    {
+      "id": 4076,
+      "slug": "perth",
+      "path": "/perth/",
+      "title": "Perth",
+      "modified": "2024-08-14T21:54:59"
+    },
+    {
+      "id": 4072,
+      "slug": "melbourne",
+      "path": "/melbourne/",
+      "title": "Melbourne",
+      "modified": "2024-08-14T21:52:19"
+    },
+    {
+      "id": 4062,
+      "slug": "brisbane",
+      "path": "/brisbane/",
+      "title": "Brisbane",
+      "modified": "2024-08-14T22:02:49"
+    },
+    {
+      "id": 4040,
+      "slug": "gold-coast",
+      "path": "/gold-coast/",
+      "title": "Gold Coast",
+      "modified": "2024-08-14T21:48:17"
+    },
+    {
+      "id": 3974,
+      "slug": "canberra",
+      "path": "/canberra/",
+      "title": "Canberra",
+      "modified": "2024-08-14T21:43:23"
+    },
+    {
+      "id": 3955,
+      "slug": "sunshine-coast",
+      "path": "/sunshine-coast/",
+      "title": "Sunshine Coast",
+      "modified": "2024-08-14T21:58:34"
+    },
+    {
+      "id": 3942,
+      "slug": "darwin",
+      "path": "/darwin/",
+      "title": "Darwin",
+      "modified": "2024-08-14T21:45:57"
+    },
+    {
+      "id": 2833,
+      "slug": "eventos",
+      "path": "/eventos/",
+      "title": "Eventos",
+      "modified": "2024-11-20T00:40:58"
+    },
+    {
+      "id": 2802,
+      "slug": "terminos-y-condiciones",
+      "path": "/terminos-y-condiciones/",
+      "title": "Terminos y Condiciones",
+      "modified": "2022-07-09T06:13:39"
+    },
+    {
+      "id": 2736,
+      "slug": "contacto",
+      "path": "/contacto/",
+      "title": "Contacto",
+      "modified": "2026-03-27T04:18:00"
+    },
+    {
+      "id": 2200,
+      "slug": "estudiar-en-australia",
+      "path": "/estudiar-en-australia/",
+      "title": "Estudiar en Australia",
+      "modified": "2026-03-27T04:29:55"
+    },
+    {
+      "id": 1957,
+      "slug": "friends",
+      "path": "/friends/",
+      "title": "Friends",
+      "modified": "2026-03-27T05:51:20"
+    },
+    {
+      "id": 1477,
+      "slug": "welcome-2",
+      "path": "/welcome-2/",
+      "title": "Welcome",
+      "modified": "2022-07-26T09:20:07"
+    },
+    {
+      "id": 861,
+      "slug": "sidney",
+      "path": "/sidney/",
+      "title": "Sídney",
+      "modified": "2024-08-14T21:57:31"
+    },
+    {
+      "id": 817,
+      "slug": "contenido-descargable",
+      "path": "/contenido-descargable/",
+      "title": "Contenido Descargable",
+      "modified": "2026-03-27T06:00:49"
+    },
+    {
+      "id": 735,
+      "slug": "nosotros",
+      "path": "/nosotros/",
+      "title": "Nosotros",
+      "modified": "2026-03-27T04:25:14"
+    },
+    {
+      "id": 672,
+      "slug": "migracion",
+      "path": "/migracion/",
+      "title": "Migración",
+      "modified": "2026-09-28T11:46:02"
+    },
+    {
+      "id": 321,
+      "slug": "educacion-superior",
+      "path": "/educacion-superior/",
+      "title": "Educación Superior",
+      "modified": "2026-03-27T05:02:47"
+    },
+    {
+      "id": 2,
+      "slug": "home",
+      "path": "/",
+      "title": "Welcome",
+      "modified": "2026-03-26T05:52:24"
+    }
+  ],
+  "posts": [
+    {
+      "id": 5801,
+      "slug": "australian-business-number-abn",
+      "path": "/australian-business-number-abn/",
+      "title": "Australian Business Number (ABN)",
+      "date": "2023-05-16T08:17:20"
+    },
+    {
+      "id": 5748,
+      "slug": "ya-escribiste-tu-genuine-temporary-entrant-letter-gte-letter-para-tu-visa-de-estudiante-en-australia",
+      "path": "/ya-escribiste-tu-genuine-temporary-entrant-letter-gte-letter-para-tu-visa-de-estudiante-en-australia/",
+      "title": "¿Ya escribiste tu Genuine Temporary Entrant Letter (GTE Letter) para tu visa de estudiante en Australia?",
+      "date": "2023-05-16T00:50:50"
+    },
+    {
+      "id": 5720,
+      "slug": "adelaide-city",
+      "path": "/adelaide-city/",
+      "title": "Adelaide",
+      "date": "2023-05-15T23:36:37"
+    },
+    {
+      "id": 5809,
+      "slug": "tax-file-number-tfn-ya-tienes-el-tuyo",
+      "path": "/tax-file-number-tfn-ya-tienes-el-tuyo/",
+      "title": "TAX FILE NUMBER (TFN), ¿Ya tienes el tuyo?",
+      "date": "2023-05-15T08:46:34"
+    },
+    {
+      "id": 5792,
+      "slug": "las-mejores-razones-para-estudiar-y-vivir-en-australia",
+      "path": "/las-mejores-razones-para-estudiar-y-vivir-en-australia/",
+      "title": "Las mejores razones para estudiar y vivir en Australia",
+      "date": "2023-05-15T07:45:04"
+    },
+    {
+      "id": 5782,
+      "slug": "solvencia-economica-para-obtener-visado-estudiantil-en-australia",
+      "path": "/solvencia-economica-para-obtener-visado-estudiantil-en-australia/",
+      "title": "Solvencia económica para obtener visado estudiantil en Australia",
+      "date": "2023-05-15T06:22:35"
+    },
+    {
+      "id": 5768,
+      "slug": "becas-australianas-para-estudiantes-nacionales-e-internacionales",
+      "path": "/becas-australianas-para-estudiantes-nacionales-e-internacionales/",
+      "title": "Becas australianas para estudiantes Nacionales e Internacionales",
+      "date": "2023-05-15T02:19:03"
+    },
+    {
+      "id": 5754,
+      "slug": "top-10-de-apps-que-debes-conocer-y-descargar-antes-de-venir-a-australia",
+      "path": "/top-10-de-apps-que-debes-conocer-y-descargar-antes-de-venir-a-australia/",
+      "title": "Top 10 de Apps que debes conocer y descargar antes de venir a Australia",
+      "date": "2023-05-15T01:18:32"
+    },
+    {
+      "id": 5736,
+      "slug": "cursos-vet-en-australia-que-son-y-por-que-es-tan-bueno-hacer-uno",
+      "path": "/cursos-vet-en-australia-que-son-y-por-que-es-tan-bueno-hacer-uno/",
+      "title": "Cursos VET en Australia ¿Qué son y por qué es tan bueno hacer uno?",
+      "date": "2023-05-15T00:00:31"
+    },
+    {
+      "id": 5528,
+      "slug": "australia",
+      "path": "/australia/",
+      "title": "Australia",
+      "date": "2023-02-04T08:33:04"
+    },
+    {
+      "id": 5495,
+      "slug": "para-que-siempre-sepas-donde-estas-y-como-llegar-a-donde-quieres-ir",
+      "path": "/para-que-siempre-sepas-donde-estas-y-como-llegar-a-donde-quieres-ir/",
+      "title": "Para que siempre sepas dónde estás y cómo llegar a dónde quieres ir",
+      "date": "2023-02-04T01:33:57"
+    },
+    {
+      "id": 5381,
+      "slug": "todo-sobre-tu-visa",
+      "path": "/todo-sobre-tu-visa/",
+      "title": "Todo sobre tu Visa",
+      "date": "2023-02-03T06:22:52"
+    },
+    {
+      "id": 5377,
+      "slug": "el-banco-en-tu-smartphone",
+      "path": "/el-banco-en-tu-smartphone/",
+      "title": "El banco en tu Smartphone",
+      "date": "2023-02-03T06:20:30"
+    },
+    {
+      "id": 5373,
+      "slug": "conversion-y-transferencias-internacionales",
+      "path": "/conversion-y-transferencias-internacionales/",
+      "title": "Conversión y transferencias internacionales",
+      "date": "2023-02-03T06:18:34"
+    },
+    {
+      "id": 5369,
+      "slug": "amplia-tu-red-de-amigos",
+      "path": "/amplia-tu-red-de-amigos/",
+      "title": "¡Amplía tu red de amigos!",
+      "date": "2023-02-03T06:15:23"
+    },
+    {
+      "id": 1,
+      "slug": "transferwise",
+      "path": "/transferwise/",
+      "title": "TransferWise",
+      "date": "2022-04-26T22:43:39"
+    }
+  ]
+}

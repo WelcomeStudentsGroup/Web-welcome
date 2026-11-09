@@ -15,7 +15,7 @@ function validate(form: HTMLFormElement): boolean {
     if (el instanceof HTMLInputElement && el.type === 'checkbox') ok = el.checked;
     else if (el instanceof HTMLInputElement && el.type === 'email') ok = EMAIL_RE.test(el.value.trim());
     else ok = el.value.trim() !== '';
-    el.closest('.field')?.classList.toggle('has-error', !ok);
+    el.closest('.field, .elementor-field-group')?.classList.toggle('has-error', !ok);
     el.setAttribute('aria-invalid', String(!ok));
     if (!ok) valid = false;
   });
@@ -47,7 +47,7 @@ export function initForms(root: ParentNode = document) {
     form.dataset.bound = 'true';
 
     form.addEventListener('input', (e) => {
-      const field = (e.target as HTMLElement).closest('.field');
+      const field = (e.target as HTMLElement).closest('.field, .elementor-field-group');
       if (field?.classList.contains('has-error')) field.classList.remove('has-error');
     });
 
@@ -55,14 +55,14 @@ export function initForms(root: ParentNode = document) {
       e.preventDefault();
       const fallback = form.dataset.fallback ?? '';
       if (!validate(form)) {
-        show(form, 'error', 'Please check the highlighted fields and try again.');
+        show(form, 'error', 'Revisa los campos marcados e inténtalo de nuevo.');
         return;
       }
 
       const data = Object.fromEntries(new FormData(form).entries());
       // Honeypot: si un bot lo completó, se descarta en silencio.
       if (data._gotcha) {
-        show(form, 'success', form.dataset.success ?? 'Thanks!');
+        show(form, 'success', form.dataset.success ?? '¡Gracias!');
         form.reset();
         return;
       }
@@ -70,7 +70,7 @@ export function initForms(root: ParentNode = document) {
 
       const endpoint = form.dataset.endpoint;
       if (!endpoint) {
-        show(form, 'error', `Our online form is being set up. Please contact us directly: ${fallback}`);
+        show(form, 'error', `Estamos configurando este formulario. Escríbenos directamente: ${fallback}`);
         return;
       }
 
@@ -82,10 +82,10 @@ export function initForms(root: ParentNode = document) {
           body: JSON.stringify({ ...data, form: form.dataset.form, page: location.pathname }),
         });
         if (!res.ok) throw new Error(String(res.status));
-        show(form, 'success', form.dataset.success ?? 'Thanks!');
+        show(form, 'success', form.dataset.success ?? '¡Gracias!');
         form.reset();
       } catch {
-        show(form, 'error', `Sorry, something went wrong sending your message. Please contact us directly: ${fallback}`);
+        show(form, 'error', `No pudimos enviar tu mensaje. Escríbenos directamente: ${fallback}`);
       } finally {
         setLoading(form, false);
       }

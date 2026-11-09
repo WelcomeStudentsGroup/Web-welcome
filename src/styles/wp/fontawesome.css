@@ -1,0 +1,44 @@
+/* Font Awesome Free 5 — subconjunto generado por scripts/wp-import (solo los iconos usados).
+   Fuentes: SIL OFL 1.1 · CSS: MIT · https://fontawesome.com/license/free */
+.fa,.fas,.far,.fab{-moz-osx-font-smoothing:grayscale;-webkit-font-smoothing:antialiased;display:inline-block;font-style:normal;font-variant:normal;text-rendering:auto;line-height:1}
+.fa,.fas{font-family:"Font Awesome 5 Free";font-weight:900}
+.far{font-family:"Font Awesome 5 Free";font-weight:400}
+.fab{font-family:"Font Awesome 5 Brands";font-weight:400}
+@font-face{font-family:"Font Awesome 5 Free";font-style:normal;font-weight:900;font-display:block;src:url(./fonts/fa-solid-900.woff2) format("woff2")}
+@font-face{font-family:"Font Awesome 5 Free";font-style:normal;font-weight:400;font-display:block;src:url(./fonts/fa-regular-400.woff2) format("woff2")}
+@font-face{font-family:"Font Awesome 5 Brands";font-style:normal;font-weight:400;font-display:block;src:url(./fonts/fa-brands-400.woff2) format("woff2")}
+.fa-address-book:before{content:"\f2b9"}
+.fa-anchor:before{content:"\f13d"}
+.fa-archway:before{content:"\f557"}
+.fa-book:before{content:"\f02d"}
+.fa-building:before{content:"\f1ad"}
+.fa-bus:before{content:"\f207"}
+.fa-chalkboard-teacher:before{content:"\f51c"}
+.fa-check:before{content:"\f00c"}
+.fa-check-circle:before{content:"\f058"}
+.fa-check-double:before{content:"\f560"}
+.fa-check-square:before{content:"\f14a"}
+.fa-chevron-left:before{content:"\f053"}
+.fa-chevron-right:before{content:"\f054"}
+.fa-envelope:before{content:"\f0e0"}
+.fa-facebook:before{content:"\f09a"}
+.fa-hand-holding-heart:before{content:"\f4be"}
+.fa-hands-helping:before{content:"\f4c4"}
+.fa-instagram:before{content:"\f16d"}
+.fa-link:before{content:"\f0c1"}
+.fa-linkedin:before{content:"\f08c"}
+.fa-map-marked-alt:before{content:"\f5a0"}
+.fa-map-marker-alt:before{content:"\f3c5"}
+.fa-mobile-alt:before{content:"\f3cd"}
+.fa-passport:before{content:"\f5ab"}
+.fa-phone-alt:before{content:"\f879"}
+.fa-piggy-bank:before{content:"\f4d3"}
+.fa-plane:before{content:"\f072"}
+.fa-plane-departure:before{content:"\f5b0"}
+.fa-search:before{content:"\f002"}
+.fa-search-plus:before{content:"\f00e"}
+.fa-star:before{content:"\f005"}
+.fa-tiktok:before{content:"\e07b"}
+.fa-times-circle:before{content:"\f057"}
+.fa-whatsapp:before{content:"\f232"}
+.fa-youtube:before{content:"\f167"}

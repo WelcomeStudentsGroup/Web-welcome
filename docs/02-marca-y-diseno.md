@@ -1,55 +1,54 @@
-# 02 · Marca y sistema de diseño
+# 02 · Marca y diseño
 
-Los tokens están en `src/styles/tokens.css`. Úsalos siempre (`var(--...)`): no
-escribas colores sueltos en los componentes.
+El diseño **no se rediseñó**: es el del sitio WordPress + Elementor original. El CSS de
+Elementor (kit global, header, footer y cada página) se importa tal cual y se reescribe
+solo lo imprescindible (fuentes auto-hospedadas, rutas locales de imágenes). Por eso no hay
+un sistema de tokens propio: los colores y tipografías los define el **kit de Elementor**
+(`.elementor-kit-5`, en `src/styles/wp/vendor.css`).
 
-## Colores
+## Colores (kit de Elementor)
 
-| Token | Valor | Uso |
+| Variable | Valor | Uso |
 |---|---|---|
-| `--brand-purple` | `#722679` | Color principal: eyebrows, enlaces, secciones destacadas |
-| `--brand-orange` | `#eb7a25` | Acento **decorativo** (líneas, brillos, números grandes) |
-| `--brand-orange-ink` | `#b8580f` | Naranja **accesible** para botones y texto (contraste AA 4.7:1 con blanco) |
-| `--brand-teal` | `#033b39` | Superficie oscura (footer, secciones "How we help", valores) |
-| `--brand-grey` / `--ink-soft` | `#5d5c63` | Texto secundario |
-| `--ink` | `#211926` | Texto principal (negro con tinte morado) |
-| `--bg` / `--bg-alt` | `#faf7f2` / `#f2ece2` | Fondo marfil y su variante para alternar secciones |
-
-> Regla de accesibilidad: el naranja de marca (`#eb7a25`) sobre blanco tiene un contraste
-> de 2.9:1 y **no** cumple WCAG AA para texto. Para botones y texto naranja usa siempre
-> `--brand-orange-ink`.
+| `--e-global-color-primary` | `#EF7300` | Naranja de marca: botones, títulos, iconos |
+| `--e-global-color-secondary` | `#003C39` | Verde oscuro: menú, títulos secundarios |
+| `--e-global-color-text` | `#3A3A3A` | Texto |
+| `--e-global-color-accent` | `#EF7300` | Acento |
+| `--e-global-color-8a555f1` / `346a7db` | `#7C1E7D` | Morado de marca: fondos, menú móvil |
+| Degradado de marca | `#EE7300 → #7C1E7D` | Superposiciones de las cabeceras |
 
 ## Tipografía
 
-- **Display / títulos:** Fraunces (serif editorial), alternativa libre a *Archer*.
-- **Texto / interfaz:** Plus Jakarta Sans, alternativa libre a *Gotham*.
-- Ambas auto-hospedadas vía `@fontsource-variable` (sin Google Fonts), con `font-display: swap`
-  y preload del subconjunto latino.
-- Si la empresa compra la licencia web de Archer y Gotham, reemplazar los imports en
-  `BaseLayout.astro` y las variables `--font-display` / `--font-body`.
+El kit usaba Google Fonts; aquí todas las familias se **auto-hospedan** con `@fontsource`
+(el conversor renombra las familias en el CSS):
 
-Escala: `.h1` (2.4–4.2rem), `.h2` (1.9–2.75rem), `.h3`, `.h4`, `.lede`, `.body-sm`,
-`.caption`, `.eyebrow` (etiqueta en mayúsculas con línea naranja).
+| En WordPress | En este sitio | Uso |
+|---|---|---|
+| Roboto | Roboto Variable | Primaria (títulos) |
+| Roboto Slab | Roboto Slab Variable | Secundaria (títulos de sección) |
+| Montserrat | Montserrat Variable | Texto |
+| Raleway | Raleway Variable | Detalles |
+| Slabo 13px / Slabo 27px | iguales | Títulos de widgets |
+| Antic Slab | igual | Menú principal |
+| Archer (TTF subido al WordPress, fuente comercial) | Roboto Slab Variable | Enlaces |
+| Gotham Rounded | Montserrat Variable | Detalles |
+| Font Awesome 5 Free | Subconjunto de 35 iconos (`src/styles/wp/fontawesome.css`) | Iconos de listas, redes, botones |
+| eicons (Elementor) | SVG inline (`scripts/wp-import/lib/icons.mjs`) | Flechas de carrusel, estrellas, play, menú |
 
-## Componentes visuales
+**Archer:** el WordPress servía archivos TTF de Archer descargados de un sitio de fuentes
+gratuitas. Archer es una fuente comercial (Hoefler&Co.); no se copió al repositorio. Si la
+empresa tiene licencia web, se agregan los archivos y se quita el reemplazo en
+`scripts/wp-import/lib/css.mjs` (`FONT_MAP`).
 
-- **Botones:** `.btn` + `.btn-primary` (naranja accesible), `.btn-secondary` (contorno),
-  `.btn-ghost` (texto con flecha), `.btn-sm`, `.btn-block`.
-- **Tarjetas:** `.card` (+ `--hover`, `--compact`, `--row`, `--on-dark`), `.icon-tile`.
-- **Secciones:** `.section` (+ `--alt`, `--purple`, `--teal`, `--tight-top`), `.section-head`.
-- **Grillas:** `.grid` + `.grid-2|3|4` (responsive automático), `.two-col`.
-- **Chips y etiquetas:** `.chip`, `.chip--on-dark`, `.tag`, `.cert-chip`.
-- **Listas:** `.check-list` (✓ naranja), `.why-list` + `.why-item` + `.why-num`.
-- **Banda CTA:** componente `CtaBand.astro`.
+## Logo e íconos
 
-## Logo
+- Logo del header y del footer: imágenes importadas del WordPress (`public/uploads/2022/05/`).
+- Favicon, íconos PNG, `favicon.ico`, manifest e imagen Open Graph: se generan con
+  `node scripts/generate-assets.mjs` a partir de `src/assets/favicon-512.png` (icono del sitio
+  en WordPress) y `src/assets/logo-welcome.png`.
 
-El logo actual es **provisional** (una "w" con degradado morado a naranja, en
-`src/components/Logo.astro` y `public/favicon.svg`). Cuando exista el SVG oficial:
-1. Reemplazar el SVG en `Logo.astro` y `public/favicon.svg`.
-2. Ejecutar `node scripts/generate-assets.mjs` para regenerar los PNG y la imagen OG.
+## Estilos propios
 
-## Tema
-
-Tema claro único, por decisión de diseño: es un sitio de marca pintado explícitamente y no
-se invierte con el modo oscuro del sistema.
+`src/styles/site.css` solo añade lo que en WordPress hacía JavaScript (estados del menú,
+carruseles, slideshows, fachada de video) y las páginas nuevas (búsqueda, privacidad, 404).
+Usa los colores de marca de arriba; no introduzcas una paleta paralela.

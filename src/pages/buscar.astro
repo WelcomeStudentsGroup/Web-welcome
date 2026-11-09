@@ -1,0 +1,31 @@
+---
+/**
+ * Resultados de búsqueda (/buscar/?s=texto). En WordPress la búsqueda la hacía el
+ * servidor (/?s=texto); en el sitio estático la hace el navegador con /search-index.json.
+ * Usa la misma plantilla de archivo que las categorías.
+ */
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import WpContent from '@/components/WpContent.astro';
+import { templates } from '@/lib/wp';
+
+const html = templates.archive.html.replace(
+  /<wsg-posts[^>]*><\/wsg-posts>/,
+  '<div class="elementor-posts-container elementor-posts elementor-posts--skin-classic elementor-grid elementor-has-item-ratio" id="wsgSearchResults" aria-live="polite"><p class="elementor-posts-nothing-found">Buscando…</p></div>',
+);
+---
+
+<BaseLayout
+  title="Resultados de búsqueda"
+  description="Busca artículos y páginas de Welcome Students Group: visas, cursos, ciudades de Australia, vida de estudiante y más."
+  pageCss={[templates.archive.css]}
+  bodyClass={`search search-results elementor-page-${templates.archive.elementorId} elementor-template-full-width`}
+  noindex
+>
+  <div class={`elementor elementor-${templates.archive.elementorId} elementor-location-archive wsg-search`} data-elementor-type="archive" data-search-page>
+    <h1 class="elementor-screen-only">Resultados de búsqueda</h1>
+    <WpContent
+      html={html}
+      replacements={{ '<wsg-post-title></wsg-post-title>': '<span id="wsgSearchTitle">Search Results for: …</span>', __WSG_CURRENT_URL__: '/buscar/' }}
+    />
+  </div>
+</BaseLayout>

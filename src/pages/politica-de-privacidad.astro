@@ -1,0 +1,23 @@
+---
+/**
+ * Política de privacidad. En WordPress era una ventana emergente (popup de Elementor
+ * abierta desde el footer); aquí es una página con URL propia.
+ */
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { layout } from '@/lib/wp';
+
+const html = (layout.privacyHtml || '').replace(/<h2 class="elementor-heading-title([^"]*)">(\s*Política de Privacidad\s*)<\/h2>/i, '<h1 class="elementor-heading-title$1">$2</h1>');
+---
+
+<BaseLayout
+  title="Política de Privacidad"
+  description="Política de privacidad de Welcome Students Group: qué información recopilamos en el sitio web, cómo la usamos y protegemos, cookies y derechos del usuario."
+  pageCss={[layout.privacyCss]}
+  bodyClass="page-template-default page elementor-page elementor-page-6185"
+  breadcrumbs={[{ name: 'Política de Privacidad', href: '/politica-de-privacidad/' }]}
+>
+  <div class="wsg-privacy">
+    {!/<h1\b/.test(html) && <h1 class="elementor-screen-only">Política de Privacidad</h1>}
+    <Fragment set:html={html} />
+  </div>
+</BaseLayout>

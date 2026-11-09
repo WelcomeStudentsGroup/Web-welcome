@@ -1,0 +1,59 @@
+---
+/**
+ * Renderiza el HTML importado de una página o plantilla de WordPress.
+ * - Reemplaza los marcadores en línea (título del artículo, URL actual, etc.).
+ * - Donde el conversor dejó `<wsg-posts>` (widget de artículos de Elementor), renderiza
+ *   el listado real con PostsGrid, con paginación.
+ */
+import PostsGrid from './PostsGrid.astro';
+import type { WpPost } from '@/lib/wp';
+
+interface Props {
+  html: string;
+  /** Artículos disponibles para los widgets <wsg-posts> (ya ordenados). */
+  posts?: WpPost[];
+  /** Número de página del listado (paginación). */
+  page?: number;
+  /** URL base del listado para construir la paginación. */
+  baseUrl?: string;
+  /** Reemplazos de texto (marcadores en línea). */
+  replacements?: Record<string, string>;
+}
+
+const { html, posts = [], page = 1, baseUrl = '/', replacements = {} } = Astro.props;
+
+let out = html;
+for (const [from, to] of Object.entries(replacements)) out = out.split(from).join(to);
+
+const decode = (s: string) => s.replace(/&quot;/g, '"').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
+const parseAttrs = (s: string) => Object.fromEntries([...s.matchAll(/([a-z-]+)="([^"]*)"/g)].map((m) => [m[1], decode(m[2])]));
+
+type Part = { type: 'html'; html: string } | { type: 'posts'; attrs: Record<string, string> };
+const parts: Part[] = [];
+let last = 0;
+for (const m of out.matchAll(/<wsg-posts([^>]*)><\/wsg-posts>/g)) {
+  parts.push({ type: 'html', html: out.slice(last, m.index) });
+  parts.push({ type: 'posts', attrs: parseAttrs(m[1]) });
+  last = (m.index ?? 0) + m[0].length;
+}
+parts.push({ type: 'html', html: out.slice(last) });
+---
+
+{
+  parts.map((part) =>
+    part.type === 'html' ? (
+      <Fragment set:html={part.html} />
+    ) : (
+      <PostsGrid
+        posts={posts}
+        page={page}
+        baseUrl={baseUrl}
+        perPage={Number(part.attrs['per-page']) || 9}
+        excerptWords={Number(part.attrs['excerpt-words']) || 25}
+        readMore={part.attrs['read-more'] || 'LEER MÁS »'}
+        avatar={part.attrs.avatar === '1'}
+        paginate={part.attrs.paginate === '1'}
+      />
+    ),
+  )
+}
