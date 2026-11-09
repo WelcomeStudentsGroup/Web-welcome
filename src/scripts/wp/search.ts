@@ -57,18 +57,37 @@ export async function initSearch() {
     return;
   }
   const date = (iso: string) => new Date(iso).toLocaleDateString('es', { day: 'numeric', month: 'long', year: 'numeric' });
-  results.innerHTML = scored
+  // Paginación de 10 en 10, como WordPress (?s=texto&pag=N).
+  const PER_PAGE = 10;
+  const params = new URLSearchParams(location.search);
+  const current = Math.max(1, Number(params.get('pag')) || 1);
+  const total = Math.ceil(scored.length / PER_PAGE);
+  const pageItems = scored.slice((current - 1) * PER_PAGE, current * PER_PAGE);
+  const pageUrl = (n: number) => {
+    const u = new URLSearchParams(params);
+    if (n === 1) u.delete('pag');
+    else u.set('pag', String(n));
+    return `/buscar/?${u.toString()}`;
+  };
+  const pagination =
+    total > 1
+      ? `<nav class="elementor-pagination" aria-label="Paginación">${Array.from({ length: total }, (_, i) => i + 1)
+          .map((n) => (n === current ? `<span aria-current="page" class="page-numbers current"><span class="elementor-screen-only">Page</span>${n}</span>` : `<a class="page-numbers" href="${esc(pageUrl(n))}"><span class="elementor-screen-only">Page</span>${n}</a>`))
+          .join(' ')}</nav>`
+      : '';
+  results.innerHTML = pageItems
     .map(({ e }) => {
       const excerpt = e.text.split(/\s+/).slice(0, 25).join(' ');
       return `<article class="elementor-post elementor-grid-item post ${e.image ? 'has-post-thumbnail' : ''}">
   ${e.image ? `<a class="elementor-post__thumbnail__link" href="${esc(e.path)}" tabindex="-1" aria-hidden="true"><div class="elementor-post__thumbnail"><img src="${esc(e.image.src)}" alt="${esc(e.image.alt)}"${e.image.width ? ` width="${e.image.width}" height="${e.image.height}"` : ''} loading="lazy" decoding="async"></div></a>` : ''}
   <div class="elementor-post__text">
     <h3 class="elementor-post__title"><a href="${esc(e.path)}">${esc(e.title)}</a></h3>
-    <div class="elementor-post__meta-data"><span class="elementor-post-date">${e.type === 'post' ? date(e.date) : 'Página'}</span></div>
+    <div class="elementor-post__meta-data"><span class="elementor-post-date">${date(e.date)}</span></div>
     <div class="elementor-post__excerpt"><p>${esc(excerpt)}</p></div>
     <div class="elementor-post__read-more-wrapper"><a class="elementor-post__read-more" href="${esc(e.path)}">LEER MÁS »</a></div>
   </div>
 </article>`;
     })
     .join('');
+  results.insertAdjacentHTML('afterend', pagination);
 }

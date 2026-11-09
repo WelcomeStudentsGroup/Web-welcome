@@ -16,8 +16,10 @@ import { parse } from 'node-html-parser';
 import { eiconSvg } from './icons.mjs';
 import { escapeAttr, hash, localizeUrl } from './util.mjs';
 
+// Nota: data-element_type se conserva porque el CSS de Elementor lo usa como selector
+// ([data-element_type="column"] alinea verticalmente las columnas).
 const DROP_ATTRS = new Set([
-  'data-settings', 'data-id', 'data-element_type', 'data-e-type', 'data-widget_type', 'data-model-cid', 'data-elementor-id',
+  'data-settings', 'data-id', 'data-e-type', 'data-widget_type', 'data-model-cid', 'data-elementor-id',
   'data-elementor-post-type', 'data-elementor-type', 'decoding', 'fetchpriority', 'srcset', 'sizes', 'data-gallery-items',
   'data-breakpoints', 'data-custom_default_control', 'data-default_control_key', 'data-first-init', 'data-load-more-status',
   'data-slider-settings', 'data-elementor-open-lightbox', 'data-elementor-lightbox-slideshow', 'data-elementor-lightbox-title',
@@ -141,7 +143,7 @@ function carouselSettings(s, defaults = {}) {
     speed: num(s.speed, 500),
     gap: num(s.space_between?.size, defaults.gap ?? 10),
     arrows: s.navigation ? s.navigation !== 'none' && s.navigation !== 'dots' : bool(s.show_arrows ?? s.arrows, true),
-    dots: s.navigation ? s.navigation === 'dots' || s.navigation === 'both' : bool(s.pagination ?? s.dots, false),
+    dots: s.navigation ? s.navigation === 'dots' || s.navigation === 'both' : s.pagination ? s.pagination !== 'none' && s.pagination !== '' : bool(s.dots, false),
   };
 }
 
@@ -166,10 +168,8 @@ export async function sanitizeFragment(root, ctx) {
     if (crm) {
       const src = crm.getAttribute('src');
       const title = crm.getAttribute('title') || 'Formulario de contacto';
-      const h = crm.getAttribute('data-height') || '837';
-      cont.set_content(
-        `<div class="wsg-crm-form"><iframe src="${escapeAttr(src)}" title="${escapeAttr(title)}" loading="lazy" height="${escapeAttr(h)}"></iframe></div>`,
-      );
+      // La altura real la fijaba el script del CRM (874 px escritorio / 894 px móvil); va en site.css.
+      cont.set_content(`<div class="wsg-crm-form"><iframe src="${escapeAttr(src)}" title="${escapeAttr(title)}" loading="lazy"></iframe></div>`);
       ctx.notes.push('crm-form:' + src);
       continue;
     }
@@ -245,7 +245,7 @@ export async function sanitizeFragment(root, ctx) {
     }
     // Carruseles: guardamos solo lo que usa nuestro script.
     if (sec.classList.contains('elementor-widget-image-carousel') || sec.classList.contains('elementor-widget-testimonial-carousel')) {
-      const cfg = carouselSettings(s, { slides: 3 });
+      const cfg = carouselSettings(s, { slides: 3, gap: sec.classList.contains('elementor-widget-image-carousel') ? 0 : 10 });
       const swiper = sec.querySelector('.swiper');
       if (swiper) swiper.setAttribute('data-wsg-carousel', JSON.stringify(cfg));
     }
@@ -338,6 +338,23 @@ export async function sanitizeFragment(root, ctx) {
       if (a) a.setAttribute('href', '__WSG_CURRENT_URL__');
       if (txt) txt.set_content('<wsg-post-title></wsg-post-title>');
     }
+  }
+
+  // ---- Titulares animados (Elementor Pro): el SVG del subrayado lo inyectaba JavaScript ----
+  const HIGHLIGHT_SHAPES = {
+    underline_zigzag:
+      '<path d="M9.3,127.3c49.3-3,150.7-7.6,199.7-7.4c121.9,0.4,189.9,0.4,282.3,7.2C380.1,129.6,181.2,130.6,70,139 c82.6-2.9,254.2-1,335.9,1.3c-56,1.4-137.2-0.3-197.1,9"/>',
+    underline: '<path d="M7.7,145.6C109,125,299.9,116.2,401,121.3c42.1,2.2,87.6,11.8,87.3,21.1"/>',
+    circle: '<path d="M325,18C228.7-8.3,118.5,8.3,78,21C22.4,38.4,4.6,54.6,5.6,77.6c1.4,32.4,52.2,54,142.6,63.7 c66.2,7.1,212.2,7.5,273.5-8.3c64.4-16.6,104.3-57.6,33.8-98.2C386.7-12.1,242.5-1.5,196.8,8.5"/>',
+  };
+  for (const w of root.querySelectorAll('.elementor-widget-animated-headline')) {
+    const s = readSettings(w) || {};
+    if (s.headline_style !== 'highlight') continue;
+    const shape = HIGHLIGHT_SHAPES[s.marker] || HIGHLIGHT_SHAPES.underline;
+    const wrapper = w.querySelector('.elementor-headline-dynamic-wrapper');
+    const headline = w.querySelector('.elementor-headline');
+    if (wrapper) wrapper.insertAdjacentHTML('afterbegin', `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 150" preserveAspectRatio="none">${shape}</svg>`);
+    if (headline) headline.classList.add('e-animated');
   }
 
   // ---- Iconos de Elementor (fuente eicons) → SVG ----

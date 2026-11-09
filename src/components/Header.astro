@@ -7,8 +7,8 @@
 import { layout } from '@/lib/wp';
 
 const current = Astro.url.pathname;
-const chevron =
-  '<span class="sub-arrow" aria-hidden="true"><svg class="wsg-eicon" viewBox="0 0 24 24" focusable="false"><path d="m6 9 6 6 6-6-1.4-1.4L12 12.2 7.4 7.6z"/></svg></span>';
+// Misma flecha que añadía Elementor (smartmenus): un caret sólido de Font Awesome.
+const chevron = '<span class="sub-arrow" aria-hidden="true"><i class="fas fa-caret-down"></i></span>';
 
 let html = layout.header;
 // Ítem de menú activo (WordPress lo marcaba con current-menu-item / elementor-item-active).

@@ -42,6 +42,8 @@ export function setupCarousel(el: HTMLElement, cfg: Config, opts: { wrapper?: HT
 
   wrapper.classList.add('wsg-track');
   container.classList.add('wsg-viewport');
+  // Como hace Swiper: sin esta clase, el CSS de Elementor limita el ancho de cada slide.
+  el.classList.add('swiper-initialized');
 
   const maxIndex = () => Math.max(0, slides.length - n);
   const layout = () => {
@@ -162,7 +164,7 @@ export function initCarousels(root: ParentNode = document) {
     const slides = Array.from(wrapper.querySelectorAll<HTMLElement>(':scope > .swiper-slide'));
     const per = Number(container.dataset.slidestoshow) || 2;
     const fill = tl.querySelector<HTMLElement>('.twae-line-fill');
-    setupCarousel(container, { slides: per, slidesTablet: Math.min(per, 2), slidesMobile: 1, autoplay: container.dataset.autoplay === 'true', interval: 5000, loop: false, speed: 500, gap: 0, arrows: true, dots: false }, {
+    setupCarousel(container, { slides: per, slidesTablet: Math.min(per, 2), slidesMobile: 1, autoplay: container.dataset.autoplay === 'true', interval: 5000, loop: false, speed: 500, gap: 15, arrows: true, dots: false }, {
       wrapper,
       slides,
       prev: tl.querySelector<HTMLElement>('.twae-button-prev'),

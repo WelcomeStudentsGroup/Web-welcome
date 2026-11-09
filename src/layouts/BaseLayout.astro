@@ -4,12 +4,19 @@
  * fuentes auto-hospedadas, CSS importado del WordPress, header, footer y WhatsApp.
  */
 import '@fontsource-variable/roboto';
+import '@fontsource-variable/roboto/wght-italic.css';
 import '@fontsource-variable/roboto-slab';
 import '@fontsource-variable/montserrat';
+import '@fontsource-variable/montserrat/wght-italic.css';
 import '@fontsource-variable/raleway';
+import '@fontsource-variable/raleway/wght-italic.css';
 import '@fontsource/slabo-13px';
 import '@fontsource/slabo-27px';
 import '@fontsource/antic-slab';
+import '@fontsource/zilla-slab/400.css';
+import '@fontsource/zilla-slab/500.css';
+import '@fontsource/zilla-slab/600.css';
+import '@fontsource/zilla-slab/700.css';
 import '@/styles/wp/vendor.css';
 import '@/styles/wp/fontawesome.css';
 import '@/styles/wp/generated.css';
@@ -44,6 +51,8 @@ interface Props {
   ogType?: 'website' | 'article';
   published?: string;
   modified?: string;
+  /** Plantilla "Elementor Canvas": la página no lleva header ni footer del sitio. */
+  canvas?: boolean;
 }
 
 const {
@@ -60,6 +69,7 @@ const {
   ogType = 'website',
   published,
   modified,
+  canvas = false,
 } = Astro.props;
 
 const base = Astro.site ?? Astro.url;
@@ -103,8 +113,6 @@ const cssLinks = pageCss.filter((c): c is string => !!c);
     <link rel="preload" href={robotoLatin} as="font" type="font/woff2" crossorigin />
     <link rel="preload" href={robotoSlabLatin} as="font" type="font/woff2" crossorigin />
     <link rel="preload" href={montserratLatin} as="font" type="font/woff2" crossorigin />
-    {cssLinks.map((href) => <link rel="stylesheet" href={href} />)}
-    <link rel="stylesheet" href="/wp-css/custom.css" />
 
     <!-- Open Graph / redes sociales -->
     <meta property="og:type" content={ogType} />
@@ -125,13 +133,17 @@ const cssLinks = pageCss.filter((c): c is string => !!c);
     <script type="application/ld+json" set:html={toJsonLd(graph)} />
     <slot name="head" />
   </head>
-  <body class={`wp-theme-jagonzalez elementor-default elementor-kit-5 ${bodyClass}`.trim()}>
+  <body class={`wp-theme-jagonzalez elementor-default elementor-kit-5 ${canvas ? 'elementor-template-canvas ' : ''}${bodyClass}`.trim()}>
+    {/* El CSS de la página y el "CSS adicional" van después del CSS global (mismo orden que en WordPress). */}
+    {cssLinks.map((href) => <link rel="stylesheet" href={href} />)}
+    <link rel="stylesheet" href="/wp-css/custom.css" />
     <a href="#main" class="skip-link">Ir al contenido</a>
-    <Header />
+    {!canvas && <Header />}
     <main id="main" class="wsg-main">
       <slot />
     </main>
-    <Footer />
+    {!canvas && <Footer />}
+    {/* El botón de WhatsApp (plugin Joinchat) sí aparecía en las páginas canvas. */}
     <WhatsAppFloat />
     <script>
       import { initSite } from '@/scripts/wp/index';

@@ -2,7 +2,7 @@
  * Reescritura de CSS de Elementor para el sitio estático:
  * - Fuentes: las familias de Google Fonts pasan a las auto-hospedadas de @fontsource
  *   (nombres "… Variable"); "Archer" (fuente comercial sin licencia web en el repo) se
- *   sustituye por Roboto Slab y "Gotham Rounded" por Montserrat.
+ *   sustituye por Zilla Slab (métricas casi idénticas) y "Gotham Rounded" por Montserrat.
  * - Se eliminan @font-face y @import externos.
  * - Las url() de imágenes del origen pasan a copias optimizadas en public/.
  */
@@ -11,13 +11,23 @@ const FONT_MAP = [
   [/(["'])Roboto\1/g, '"Roboto Variable"'],
   [/(["'])Montserrat\1/g, '"Montserrat Variable"'],
   [/(["'])Raleway\1/g, '"Raleway Variable"'],
-  [/(["'])Archer\1/g, '"Roboto Slab Variable"'],
+  // Archer (fuente comercial) → Zilla Slab: misma anchura de texto (±1 %) en los títulos medidos.
+  [/(["'])Archer\1/g, '"Zilla Slab"'],
   [/(["'])Gotham Rounded\1/g, '"Montserrat Variable"'],
+];
+
+const FONT_MAP_UNQUOTED = [
+  [/font-family:\s*Roboto Slab(?=\s*[,;}])/g, 'font-family:"Roboto Slab Variable"'],
+  [/font-family:\s*Roboto(?=\s*[,;}])/g, 'font-family:"Roboto Variable"'],
+  [/font-family:\s*Montserrat(?=\s*[,;}])/g, 'font-family:"Montserrat Variable"'],
+  [/font-family:\s*Raleway(?=\s*[,;}])/g, 'font-family:"Raleway Variable"'],
+  [/font-family:\s*Archer(?=\s*[,;}])/g, 'font-family:"Zilla Slab"'],
 ];
 
 export function renameFonts(css) {
   let out = css;
   for (const [re, to] of FONT_MAP) out = out.replace(re, to);
+  for (const [re, to] of FONT_MAP_UNQUOTED) out = out.replace(re, to);
   return out;
 }
 

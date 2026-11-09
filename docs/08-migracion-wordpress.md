@@ -83,6 +83,29 @@ HTML renderizado refleja el resultado final. Todo está automatizado y es repeti
   galería filtrable, fachada de video, búsqueda, paginación, 404.
 - Sin errores de consola ni violaciones de CSP en `npm run preview`.
 
+## Auditoría visual posterior (noviembre de 2026)
+
+Tras la primera entrega, cinco revisiones independientes compararon todas las páginas (escritorio
+y móvil) con el original, con `scripts/wp-import/qa-compare.cjs` y medidas del DOM. Se corrigió:
+
+- Columnas con alineación vertical centrada (Elementor usa `[data-element_type="column"]` en su
+  CSS; el conversor ya no elimina ese atributo).
+- Orden de las hojas de estilo igual al de WordPress (tema antes que Elementor; CSS de página y
+  "CSS adicional" después del paquete global) → títulos de tarjetas, carruseles, etiquetas del mapa.
+- Altura del formulario del CRM: dinámica, con el protocolo de mensajes del propio formulario.
+- Menú: flecha `fa-caret-down` de Font Awesome, desplegables de 130 px sin sombra, submenús
+  anidados a la misma altura; menú móvil justo bajo el botón, con los paddings de Elementor.
+- Carruseles: clase `swiper-initialized` (en móvil los logos salían a 62 px), sin separación entre
+  logos, línea de tiempo con 15 px entre tarjetas, zoom Ken Burns 1→1,3 lineal en 20 s.
+- Icono de comillas de los testimonios (glifo de Font Awesome puesto por CSS) y caret del menú
+  añadidos al subconjunto de la fuente.
+- Cursivas reales de Montserrat, Roboto y Raleway.
+- Mapa "Elije tu destino": interacción al pulsar una ciudad (panel "Datos de…").
+- Política de privacidad con el CSS y el ancho (640 px) de la ventana emergente original.
+- Búsqueda: 10 resultados por página con paginación; páginas con fecha e imagen destacada.
+- Paginación del blog con el espacio entre números.
+- Testimonios PowerPack (portada, eventos): mostrados como estaban diseñados (ver `docs/07-pendientes.md`).
+
 ## Repetir la importación
 
 Mientras el WordPress siga en línea, cualquier cambio allí se trae con `fetch.mjs` +

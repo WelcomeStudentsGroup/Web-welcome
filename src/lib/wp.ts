@@ -22,6 +22,8 @@ export interface WpPage {
   title: string;
   /** <title> tal como lo tenía WordPress ("Brisbane – Welcome Students Group"). */
   documentTitle: string;
+  /** Imagen destacada de la página en WordPress (pocas la tienen; se usa en la búsqueda). */
+  image?: WpImage | null;
   description: string;
   modified: string;
   published: string;

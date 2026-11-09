@@ -14,7 +14,15 @@ const FONTS = {
   fab: { file: 'fa-brands-400.woff2', family: 'Font Awesome 5 Brands', weight: 400 },
 };
 
-export async function buildFontAwesome({ used, allCss, snapshotFonts, outDir }) {
+/**
+ * @param {object} o
+ * @param {Set<string>} o.used       iconos usados en <i class="fa…"> ("fas:fa-check")
+ * @param {string} o.allCss          all.min.css de Font Awesome (para los puntos de código)
+ * @param {string[]} [o.siteCss]     CSS del sitio: se buscan glifos puestos con content:"\fXXX"
+ * @param {string} o.snapshotFonts   carpeta con los woff2 originales
+ * @param {string} o.outDir          carpeta de salida (src/styles/wp)
+ */
+export async function buildFontAwesome({ used, allCss, siteCss = [], snapshotFonts, outDir }) {
   const codepoints = new Map();
   for (const m of allCss.matchAll(/\.(fa-[a-z0-9-]+):before\{content:"\\([0-9a-f]+)"\}/g)) codepoints.set(m[1], parseInt(m[2], 16));
 
@@ -28,6 +36,19 @@ export async function buildFontAwesome({ used, allCss, snapshotFonts, outDir }) 
     if (!perFont[key]) continue;
     perFont[key].add(String.fromCodePoint(cp));
     rules.set(icon, cp.toString(16));
+  }
+  // Glifos que el CSS pinta con pseudoelementos (p. ej. las comillas del testimonio, \f10e).
+  let cssGlyphs = 0;
+  for (const css of siteCss) {
+    for (const block of css.matchAll(/\{([^{}]*content:\s*"\\(f[0-9a-f]{3})"[^{}]*)\}/gi)) {
+      const decls = block[1];
+      const cp = parseInt(block[2], 16);
+      const ch = String.fromCodePoint(cp);
+      const brands = /Font Awesome 5 Brands/i.test(decls);
+      const regular = /font-weight:\s*400/.test(decls) && !/font-weight:\s*900/.test(decls);
+      (brands ? perFont.fab : regular ? perFont.far : perFont.fas).add(ch);
+      cssGlyphs++;
+    }
   }
 
   let css = `/* Font Awesome Free 5 — subconjunto generado por scripts/wp-import (solo los iconos usados).
@@ -47,5 +68,5 @@ export async function buildFontAwesome({ used, allCss, snapshotFonts, outDir }) 
   }
   for (const [icon, hex] of [...rules.entries()].sort()) css += `.${icon}:before{content:"\\${hex}"}\n`;
   await writeText(join(outDir, 'fontawesome.css'), css);
-  return { icons: rules.size, fonts: Object.entries(perFont).filter(([, s]) => s.size).map(([k]) => k) };
+  return { icons: rules.size, cssGlyphs, fonts: Object.entries(perFont).filter(([, s]) => s.size).map(([k]) => k) };
 }

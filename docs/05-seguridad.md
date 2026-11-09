@@ -70,6 +70,10 @@ https://securityheaders.com
 - **CRM (iframe):** la validación, el anti-spam y el almacenamiento los hace el sistema de la
   agencia. El iframe solo funciona si ese sistema permite incrustarse desde el dominio del
   sitio (hoy `welcomestudentsgroup.com`); si cambia el dominio, revisar su configuración.
+  La altura del iframe la ajusta `src/scripts/wp/crm-form.ts` hablando con el formulario por
+  `postMessage` (protocolo de iframe-resizer, el mismo que usaba el script del CRM), aceptando
+  solo mensajes cuyo origen sea `https://access.welcomestudentsgroup.com`. No se carga ningún
+  script del CRM.
 - **Newsletter:** validación en el cliente (UX), pero **el endpoint debe validar de nuevo**.
   Honeypot `_gotcha` contra bots. El endpoint (`PUBLIC_FORM_ENDPOINT`) es público; **nunca**
   pongas claves secretas en variables `PUBLIC_*`.

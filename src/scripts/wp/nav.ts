@@ -20,9 +20,10 @@ export function initNav(root: ParentNode = document) {
         if (!section) return;
         const sr = section.getBoundingClientRect();
         const wr = widget.getBoundingClientRect();
+        const tr = toggle.getBoundingClientRect();
         dropdown.style.left = `${sr.left - wr.left}px`;
         dropdown.style.width = `${sr.width}px`;
-        dropdown.style.top = `${sr.bottom - wr.top}px`;
+        dropdown.style.top = `${tr.bottom - wr.top}px`;
       };
       const setOpen = (open: boolean) => {
         if (open) stretch();

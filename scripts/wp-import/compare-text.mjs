@@ -11,7 +11,7 @@ import { parse } from 'node-html-parser';
 
 const ROOT = resolve(new URL('../../', import.meta.url).pathname);
 const SNAP = join(ROOT, 'scripts/wp-import/snapshot/html');
-const DIST = join(ROOT, 'dist');
+const DIST = process.env.WP_DIST ? resolve(process.env.WP_DIST) : join(ROOT, 'dist');
 const verbose = process.argv.includes('--verbose');
 
 const OPTS = { comment: false, blockTextElements: { script: true, noscript: true, style: true } };

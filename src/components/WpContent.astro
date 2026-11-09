@@ -6,6 +6,7 @@
  *   el listado real con PostsGrid, con paginación.
  */
 import PostsGrid from './PostsGrid.astro';
+import { newsletterFormHtml } from '@/lib/newsletter';
 import type { WpPost } from '@/lib/wp';
 
 interface Props {
@@ -24,6 +25,8 @@ const { html, posts = [], page = 1, baseUrl = '/', replacements = {} } = Astro.p
 
 let out = html;
 for (const [from, to] of Object.entries(replacements)) out = out.split(from).join(to);
+// Footer incrustado dentro de una página (plantilla canvas): formulario de newsletter.
+if (out.includes('<wsg-newsletter></wsg-newsletter>')) out = out.split('<wsg-newsletter></wsg-newsletter>').join(newsletterFormHtml('-page'));
 
 const decode = (s: string) => s.replace(/&quot;/g, '"').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
 const parseAttrs = (s: string) => Object.fromEntries([...s.matchAll(/([a-z-]+)="([^"]*)"/g)].map((m) => [m[1], decode(m[2])]));

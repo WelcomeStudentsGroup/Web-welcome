@@ -37,7 +37,7 @@ Contexto completo del negocio: [`docs/01-negocio.md`](docs/01-negocio.md).
 | Lenguaje | TypeScript (strict) + `.astro` | Tipos para el contenido importado |
 | Contenido | JSON en `src/content/wp/` (generado por `scripts/wp-import/`) | Páginas y artículos tal como estaban en WordPress |
 | Estilos | CSS de Elementor/plugins/tema vendorizado (`src/styles/wp/`) + `src/styles/site.css` | Mismo diseño que el original; sin frameworks |
-| Fuentes | Roboto, Roboto Slab, Montserrat, Raleway, Slabo 13px/27px, Antic Slab auto-hospedadas (`@fontsource`) + subconjunto de Font Awesome | Sin Google Fonts: privacidad, velocidad, CSP |
+| Fuentes | Roboto, Roboto Slab, Montserrat, Raleway, Slabo 13px/27px, Antic Slab y Zilla Slab (en lugar de Archer) auto-hospedadas (`@fontsource`) + subconjunto de Font Awesome | Sin Google Fonts: privacidad, velocidad, CSP |
 | Node | 22 (ver `.nvmrc`) | |
 
 ## 3. Comandos
