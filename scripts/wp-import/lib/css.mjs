@@ -43,7 +43,7 @@ export async function localizeUrls(css, media, opts = {}) {
     found.set(raw, null);
   }
   for (const raw of found.keys()) {
-    const r = await media.localize(raw, { maxWidth: opts.maxWidth ?? 1920, variants: false });
+    const r = await media.localize(raw, { maxWidth: opts.maxWidth ?? 1600, variants: false, quality: 72 });
     found.set(raw, r.src);
   }
   return css.replace(re, (all, _q, raw) => {

@@ -329,7 +329,7 @@ async function main() {
   let generated = '/* Generado por scripts/wp-import: estilos inline del WordPress convertidos a clases, y fondos de slideshow. No editar a mano. */\n';
   for (const [cls, decl] of shared.inlineStyles) generated += `.${cls}{${decl}}\n`;
   for (const [cls, url] of shared.bgImages) {
-    const r = await media.localize(url, { maxWidth: 1920, variants: false });
+    const r = await media.localize(url, { maxWidth: 1600, variants: false, quality: 72 });
     generated += `.${cls}{background-image:url(${r.src})}\n`;
   }
   await writeText(join(STYLES, 'generated.css'), generated);

@@ -146,7 +146,8 @@ export class MediaStore {
       opts = { ...opts, raw: true };
     }
     const display = opts.raw || opts.variants === false ? null : await this.displaySize(url);
-    const key = `${original}|${maxWidth}|${display ? display.width + 'x' + display.height : 'full'}`;
+    const quality = opts.quality ?? 80;
+    const key = `${original}|${maxWidth}|${quality}|${display ? display.width + 'x' + display.height : 'full'}`;
     if (this.manifest[key]) return this.manifest[key];
 
     const src = opts.raw ? this.absolute(url) : original;
@@ -185,7 +186,7 @@ export class MediaStore {
         pipeline = pipeline.resize({ width: maxWidth });
       }
       await mkdir(dirname(out), { recursive: true });
-      if (!(await exists(out))) await pipeline.webp({ quality: 80, effort: 4 }).toFile(out);
+      if (!(await exists(out))) await pipeline.webp({ quality, effort: 4 }).toFile(out);
       result = { src: encodeURI('/' + outRel), width, height };
       // Variante pequeña para móviles cuando la imagen es grande.
       if (width >= 1000 && opts.variants !== false) {

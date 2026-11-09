@@ -210,17 +210,23 @@ export async function sanitizeFragment(root, ctx) {
     if (!s) continue;
     const id = (sec.getAttribute('class') || '').match(/elementor-element-([a-z0-9]+)/)?.[1];
     if (s.background_background === 'slideshow' && Array.isArray(s.background_slideshow_gallery) && s.background_slideshow_gallery.length) {
-      const slides = s.background_slideshow_gallery
-        .map((g, i) => {
+      // Solo la primera imagen se carga con CSS (es la que se ve); las siguientes las carga el
+      // script del slideshow después del evento load, para no retrasar la primera pintura.
+      const slides = [];
+      for (const [i, g] of s.background_slideshow_gallery.entries()) {
+        if (i === 0) {
           const cls = 'wsg-bg-' + hash(g.url, 6);
           ctx.bgImages.set(cls, g.url);
-          return `<div class="elementor-background-slideshow__slide swiper-slide${i === 0 ? ' is-active' : ''}"><div class="elementor-background-slideshow__slide__image ${cls}"></div></div>`;
-        })
-        .join('');
+          slides.push(`<div class="elementor-background-slideshow__slide swiper-slide is-active"><div class="elementor-background-slideshow__slide__image ${cls}"></div></div>`);
+        } else {
+          const r = await ctx.media.localize(g.url, { maxWidth: 1600, variants: false, quality: 72 });
+          slides.push(`<div class="elementor-background-slideshow__slide swiper-slide"><div class="elementor-background-slideshow__slide__image" data-wsg-bg="${escapeAttr(r.src)}"></div></div>`);
+        }
+      }
       const kb = s.background_slideshow_ken_burns === 'yes' ? ' wsg-slideshow--kenburns' : '';
       sec.insertAdjacentHTML(
         'afterbegin',
-        `<div class="elementor-background-slideshow swiper wsg-slideshow${kb}" data-duration="${s.background_slideshow_slide_duration || 5000}" data-transition="${s.background_slideshow_transition_duration || 500}" aria-hidden="true"><div class="swiper-wrapper">${slides}</div></div>`,
+        `<div class="elementor-background-slideshow swiper wsg-slideshow${kb}" data-duration="${s.background_slideshow_slide_duration || 5000}" data-transition="${s.background_slideshow_transition_duration || 500}" aria-hidden="true"><div class="swiper-wrapper">${slides.join('')}</div></div>`,
       );
     } else if (s.background_background === 'video' && s.background_video_link) {
       const vid = youtubeId(s.background_video_link);
