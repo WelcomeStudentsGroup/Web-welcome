@@ -26,6 +26,13 @@ Lista viva de decisiones y tareas. Marca `[x]` al completar y agrega lo nuevo.
 
 ## Contenido heredado que conviene revisar con el cliente
 
+- [ ] **Testimonios de la portada y de `/eventos/` (PowerPack):** en el WordPress el carrusel está
+      roto (no carga su script ni el CSS de las estrellas: 3 cajas apiladas con 10 estrellas en
+      columna). La réplica los muestra como estaban diseñados (carrusel de 2 con puntos, estrellas
+      en línea). Si el cliente prefiere copiar el estado roto, se desactiva en
+      `scripts/wp-import/lib/sanitize.mjs` (no emitir `data-wsg-carousel` para `pp-testimonials`)
+      y se quitan las reglas `.pp-testimonials .e-rating-wrapper` de `src/styles/site.css`.
+
 - [ ] **`/terminos-y-condiciones/`:** en WordPress la página existe pero está vacía (solo
       header y footer). Aquí se muestra igual, con el título. Redactar el contenido o eliminarla.
 - [ ] **`/welcome-2/`:** página publicada pero no enlazada; parece una versión antigua de la

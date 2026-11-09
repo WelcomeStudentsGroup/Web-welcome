@@ -40,42 +40,46 @@ const SKIP_POST_CSS = new Set([6185]);
 
 /** Archivos CSS base que se vendorizan (ruta dentro del snapshot/css, nombre aplanado). */
 const VENDOR_CSS = [
+  // Mismo orden en que WordPress cargaba las hojas (importa en los empates de especificidad).
   'normalize.min.css',
+  'wp-content_themes_jagonzalez_style.css',
   'wp-content_uploads_elementor_css_custom-frontend.min.css',
   'wp-content_plugins_elementor_assets_css_widget-image.min.css',
+  'wp-content_uploads_elementor_css_custom-pro-widget-nav-menu.min.css',
   'wp-content_plugins_elementor_assets_css_widget-spacer.min.css',
-  'wp-content_plugins_elementor_assets_css_widget-heading.min.css',
-  'wp-content_plugins_elementor_assets_css_widget-divider.min.css',
-  'wp-content_plugins_elementor_assets_css_widget-video.min.css',
-  'wp-content_plugins_elementor_assets_css_widget-image-carousel.min.css',
+  'wp-content_plugins_elementor_assets_lib_animations_styles_e-animation-pulse.min.css',
   'wp-content_plugins_elementor_assets_css_widget-social-icons.min.css',
-  'wp-content_plugins_elementor_assets_css_conditionals_shapes.min.css',
-  'wp-content_plugins_elementor_assets_css_conditionals_e-swiper.min.css',
-  'wp-content_plugins_elementor_assets_lib_swiper_v8_css_swiper.min.css',
-  'wp-content_uploads_elementor_css_custom-widget-icon-box.min.css',
+  'wp-content_uploads_elementor_css_custom-apple-webkit.min.css',
+  'wp-content_plugins_elementor_assets_css_widget-heading.min.css',
+  'wp-content_plugins_elementor-pro_assets_css_widget-form.min.css',
   'wp-content_uploads_elementor_css_custom-widget-icon-list.min.css',
+  'wp-content_plugins_elementor_assets_lib_animations_styles_e-animation-grow.min.css',
+  'wp-content_plugins_elementor_assets_lib_animations_styles_e-animation-float.min.css',
+  'wp-content_plugins_elementor_assets_lib_animations_styles_e-animation-bob.min.css',
+  'wp-content_plugins_elementor_assets_lib_animations_styles_e-animation-hang.min.css',
+  'wp-content_uploads_elementor_css_post-5.css',
+  'wp-content_plugins_powerpack-elements_assets_css_min_extensions.min.css',
+  'wp-content_plugins_powerpack-elements_assets_css_min_tooltip.min.css',
+  'wp-content_plugins_elementor_assets_css_conditionals_shapes.min.css',
+  'wp-content_plugins_elementor_assets_css_widget-divider.min.css',
+  'wp-content_uploads_elementor_css_custom-pro-widget-flip-box.min.css',
+  'wp-content_plugins_elementor_assets_css_widget-video.min.css',
+  'wp-content_plugins_elementor_assets_lib_swiper_v8_css_swiper.min.css',
+  'wp-content_plugins_elementor_assets_css_conditionals_e-swiper.min.css',
+  'wp-content_plugins_elementor_assets_css_widget-image-carousel.min.css',
+  'wp-content_uploads_elementor_css_custom-widget-icon-box.min.css',
   'wp-content_uploads_elementor_css_custom-widget-image-box.min.css',
   'wp-content_uploads_elementor_css_custom-widget-progress.min.css',
-  'wp-content_uploads_elementor_css_custom-pro-widget-flip-box.min.css',
-  'wp-content_uploads_elementor_css_custom-pro-widget-nav-menu.min.css',
   'wp-content_uploads_elementor_css_custom-pro-widget-testimonial-carousel.min.css',
-  'wp-content_plugins_elementor-pro_assets_css_widget-form.min.css',
   'wp-content_plugins_elementor-pro_assets_css_widget-posts.min.css',
   'wp-content_plugins_elementor-pro_assets_css_widget-search-form.min.css',
   'wp-content_plugins_elementor-pro_assets_css_widget-animated-headline.min.css',
   'wp-content_plugins_elementor-pro_assets_css_widget-carousel-module-base.min.css',
-  'wp-content_uploads_elementor_css_custom-apple-webkit.min.css',
-  'wp-content_plugins_elementor_assets_lib_animations_styles_e-animation-grow.min.css',
-  'wp-content_plugins_elementor_assets_lib_animations_styles_e-animation-pulse.min.css',
-  'wp-content_plugins_elementor_assets_lib_animations_styles_e-animation-float.min.css',
-  'wp-content_plugins_elementor_assets_lib_animations_styles_e-animation-bob.min.css',
-  'wp-content_plugins_elementor_assets_lib_animations_styles_e-animation-hang.min.css',
+  'wp-content_uploads_elementor_css_post-15.css',
+  'wp-content_uploads_elementor_css_post-18.css',
   'wp-content_plugins_essential-addons-for-elementor-lite_assets_front-end_css_view_general.min.css',
   'wp-content_plugins_timeline-widget-addon-for-elementor_assets_css_twae-common-styles.min.css',
   'wp-content_plugins_timeline-widget-addon-for-elementor_assets_css_twae-horizontal-timeline.min.css',
-  'wp-content_plugins_powerpack-elements_assets_css_min_extensions.min.css',
-  'wp-content_plugins_powerpack-elements_assets_css_min_tooltip.min.css',
-  'wp-content_themes_jagonzalez_style.css',
 ];
 
 const htmlFile = (path) => join(SNAP, 'html', (path.replace(/^\/|\/$/g, '').replace(/\//g, '__') || 'index').replace(/[^A-Za-z0-9_.-]/g, '_') + '.html');
@@ -115,6 +119,7 @@ async function main() {
   await rm(media.manifestFile, { force: true });
   media.manifest = {};
 
+  const mediaById = new Map(mediaIndex.map((m) => [m.id, m]));
   const idToPath = new Map();
   for (const p of pages) idToPath.set(p.id, localizeUrl(p.link));
   for (const p of posts) idToPath.set(p.id, localizeUrl(p.link));
@@ -126,7 +131,8 @@ async function main() {
   async function buildPageCss(ids, eaelIds, extraCss, outName) {
     const chunks = [];
     for (const id of ids) {
-      if (GLOBAL_POST_CSS.has(id) || SKIP_POST_CSS.has(id)) continue;
+      if (GLOBAL_POST_CSS.has(id)) continue;
+      if (SKIP_POST_CSS.has(id) && !outName.includes('privacidad')) continue;
       chunks.push(await readCssIfExists(`wp-content_uploads_elementor_css_post-${id}.css`));
     }
     for (const id of eaelIds) chunks.push(await readCssIfExists(`wp-content_uploads_essential-addons-elementor_eael-${id}.css`));
@@ -192,12 +198,20 @@ async function main() {
     const { post: cssIds, eael } = linkedCss(html);
     const css = root ? await buildPageCss(cssIds, eael, ctx.extraCss, `post-${p.id}`) : null;
     const docTitle = decodeEntities(doc.querySelector('title')?.text || '').replace(/\s+/g, ' ').trim();
+    // Imagen destacada (solo la usan los resultados de búsqueda, como en WordPress).
+    let image = null;
+    const fm = p.featured_media ? mediaById.get(p.featured_media) : null;
+    if (fm?.source_url) {
+      const r = await media.localize(fm.source_url);
+      if (!r.missing) image = { src: r.src, width: r.width, height: r.height, alt: fm.alt_text || '' };
+    }
     const rec = {
       id: p.id,
       slug: p.slug,
       path,
       title,
       documentTitle: docTitle,
+      image,
       description: truncateWords(text.replace(/^Inicio\s+Blog\s+/, ''), 155),
       modified: p.modified,
       published: p.date,
@@ -306,7 +320,6 @@ async function main() {
     if (!css) log('Falta en el snapshot:', name);
     vendorChunks.push(`/* ---- ${name} ---- */\n${css}`);
   }
-  for (const id of GLOBAL_POST_CSS) vendorChunks.push(`/* ---- post-${id}.css ---- */\n${await readCssIfExists(`wp-content_uploads_elementor_css_post-${id}.css`)}`);
   let vendor = await rewriteCss(vendorChunks.join('\n'), media);
   // La fuente de iconos "eicons" no se carga: se neutralizan sus pseudo-elementos.
   vendor = vendor.replace(/font-family:\s*eicons;?/g, 'font-family:inherit;');
@@ -329,15 +342,18 @@ async function main() {
   let generated = '/* Generado por scripts/wp-import: estilos inline del WordPress convertidos a clases, y fondos de slideshow. No editar a mano. */\n';
   for (const [cls, decl] of shared.inlineStyles) generated += `.${cls}{${decl}}\n`;
   for (const [cls, url] of shared.bgImages) {
-    const r = await media.localize(url, { maxWidth: 1920, variants: false });
+    const r = await media.localize(url, { maxWidth: 1600, variants: false, quality: 72 });
     generated += `.${cls}{background-image:url(${r.src})}\n`;
   }
   await writeText(join(STYLES, 'generated.css'), generated);
 
   // ---------- Font Awesome (subconjunto) ----------
   const allCss = await readCssIfExists('wp-content_plugins_elementor_assets_lib_font-awesome_css_all.min.css');
-  const fa = await buildFontAwesome({ used: shared.faUsed, allCss, snapshotFonts: join(SNAP, 'fonts'), outDir: STYLES });
-  log('Font Awesome:', fa.icons, 'iconos en', fa.fonts.join(', '));
+  shared.faUsed.add('fas:fa-caret-down'); // flecha de los submenús (la añadía el JS de Elementor)
+  const siteCss = [vendor, await readFile(join(PUBLIC, 'wp-css', 'custom.css'), 'utf8')];
+  for (const f of await readdir(join(PUBLIC, 'wp-css'))) if (f.endsWith('.css') && f !== 'custom.css') siteCss.push(await readFile(join(PUBLIC, 'wp-css', f), 'utf8'));
+  const fa = await buildFontAwesome({ used: shared.faUsed, allCss, siteCss, snapshotFonts: join(SNAP, 'fonts'), outDir: STYLES });
+  log('Font Awesome:', fa.icons, 'iconos +', fa.cssGlyphs, 'glifos por CSS, en', fa.fonts.join(', '));
 
   // ---------- Datos globales ----------
   await writeJson(join(CONTENT, 'site.json'), {

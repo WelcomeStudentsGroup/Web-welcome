@@ -71,7 +71,8 @@ const postReplacements: Record<string, string> = post
       documentTitle={pageDocTitle}
       description={page.description || page.title}
       pageCss={[page.css]}
-      bodyClass={`${page.path === '/' ? 'home ' : ''}page-template-default page page-id-${page.id} elementor-page elementor-page-${page.id}`}
+      bodyClass={`${page.path === '/' ? 'home ' : ''}${page.template === 'elementor_canvas' ? 'page-template-elementor_canvas' : 'page-template-default'} page page-id-${page.id} elementor-page elementor-page-${page.id}`}
+      canvas={page.template === 'elementor_canvas'}
       breadcrumbs={page.path === '/' ? undefined : [{ name: page.title, href: page.path }]}
       noindex={pageNum > 1}
       published={toIso(page.published)}

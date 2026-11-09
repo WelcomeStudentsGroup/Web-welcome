@@ -6,28 +6,9 @@
  * src/scripts/forms.ts a PUBLIC_FORM_ENDPOINT.
  */
 import { layout } from '@/lib/wp';
-import { site } from '@/config/site';
+import { newsletterFormHtml } from '@/lib/newsletter';
 
-const endpoint = import.meta.env.PUBLIC_FORM_ENDPOINT || '';
-const fallback = `<a href="${site.contact.emailHref}">${site.contact.email}</a>`;
-const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/"/g, '&quot;');
-
-const form = `<form class="elementor-form" method="post" name="Newsletter" aria-label="Newsletter" data-form="newsletter" data-endpoint="${esc(endpoint)}" data-success="¡Gracias por suscribirte!" data-fallback="${esc(fallback)}"${endpoint ? ` action="${esc(endpoint)}"` : ''} novalidate>
-  <div class="elementor-form-fields-wrapper elementor-labels-above">
-    <div class="elementor-field-type-email elementor-field-group elementor-column elementor-field-group-email elementor-col-100 elementor-field-required">
-      <label class="elementor-screen-only" for="form-field-newsletter">Correo electrónico</label>
-      <input type="email" name="email" id="form-field-newsletter" class="elementor-field elementor-size-sm elementor-field-textual" placeholder="e-mail" autocomplete="email" required>
-    </div>
-    <div class="elementor-field-group elementor-column elementor-field-type-submit elementor-col-30 e-form__buttons">
-      <button class="elementor-button elementor-size-sm" type="submit"><span class="elementor-button-content-wrapper"><span class="elementor-button-text">Enviar</span></span></button>
-    </div>
-    <div class="hp-field" aria-hidden="true"><label for="form-field-newsletter-web">No completar</label><input id="form-field-newsletter-web" name="_gotcha" tabindex="-1" autocomplete="off"></div>
-  </div>
-  <div class="form-alert form-alert--success" role="status" aria-live="polite"></div>
-  <div class="form-alert form-alert--error" role="alert"></div>
-</form>`;
-
-const html = layout.footer.replace('<wsg-newsletter></wsg-newsletter>', form);
+const html = layout.footer.replace('<wsg-newsletter></wsg-newsletter>', newsletterFormHtml());
 ---
 
 <footer class="elementor elementor-18 elementor-location-footer">

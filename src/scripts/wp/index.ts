@@ -4,7 +4,9 @@
  */
 import { initForms } from '@/scripts/forms';
 import { initCarousels } from './carousel';
+import { initCrmForms } from './crm-form';
 import { initGalleries } from './gallery';
+import { initMap } from './map';
 import { initNav } from './nav';
 import { initPostGrids } from './posts';
 import { initSearch } from './search';
@@ -19,6 +21,8 @@ export function initSite() {
   initTabs();
   initVideos();
   initGalleries();
+  initMap();
+  initCrmForms();
   initPostGrids();
   initForms();
   void initSearch();

@@ -23,11 +23,16 @@ src/pages/[...slug].astro          (una entrada por página y por artículo)
 
 ## Capas de CSS (en este orden)
 
-1. Fuentes `@fontsource` + `src/styles/wp/vendor.css` (Elementor, widgets, plugins, tema, kit,
-   header, footer) + `fontawesome.css` + `generated.css` + `src/styles/site.css` → un solo
-   archivo empaquetado y cacheable por Astro.
-2. `/wp-css/post-<id>.css` → CSS de Elementor específico de la página (se enlaza en el `<head>`).
-3. `/wp-css/custom.css` → "CSS adicional" del personalizador de WordPress, el último, como allí.
+1. Fuentes `@fontsource` (incluidas las cursivas) + `src/styles/wp/vendor.css` (Elementor, widgets,
+   plugins, tema, kit, header, footer, **en el mismo orden en que los cargaba WordPress**) +
+   `fontawesome.css` + `generated.css` + `src/styles/site.css` → un solo archivo empaquetado y
+   cacheable por Astro, enlazado en el `<head>`.
+2. `/wp-css/post-<id>.css` → CSS de Elementor específico de la página.
+3. `/wp-css/custom.css` → "CSS adicional" del personalizador de WordPress.
+
+Los puntos 2 y 3 se enlazan al principio del `<body>` para que carguen **después** del paquete
+global (Astro coloca su `<link>` al final del `<head>`); si fueran antes, el tema ganaría a las
+reglas de página en los empates de especificidad (p. ej. títulos de tarjetas centrados).
 
 ## Rutas
 
@@ -108,7 +113,9 @@ Luego enlázala desde el menú (`layout.json` → `header`, en los dos `<ul>`) y
 | `scripts/wp/nav.ts` | Menú: hamburguesa, desplegables (hover en escritorio, flechas en táctil/teclado) |
 | `scripts/wp/carousel.ts` | Carruseles de imágenes, testimonios y línea de tiempo (reemplaza Swiper/Slick) |
 | `scripts/wp/slideshow.ts` | Fondos de sección en slideshow con efecto Ken Burns |
-| `scripts/wp/tabs.ts`, `gallery.ts`, `video.ts`, `posts.ts`, `search.ts` | Pestañas, galería filtrable, fachada de YouTube, recorte de miniaturas, búsqueda |
+| `scripts/wp/tabs.ts`, `gallery.ts`, `video.ts`, `posts.ts`, `search.ts` | Pestañas, galería filtrable, fachada de YouTube, recorte de miniaturas, búsqueda (10 resultados por página) |
+| `scripts/wp/crm-form.ts` | Ajusta la altura del iframe del CRM con el protocolo de mensajes de iframe-resizer (sin cargar el script del CRM) |
+| `scripts/wp/map.ts` | Mapa "Elije tu destino": al pulsar una ciudad muestra su panel "Datos de…" y resalta el estado |
 | `scripts/forms.ts` | Envío del newsletter (POST JSON a `PUBLIC_FORM_ENDPOINT`, honeypot) |
 
 Todo funciona sin JavaScript (contenido visible, enlaces, formulario del CRM en iframe); el JS

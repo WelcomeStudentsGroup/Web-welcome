@@ -30,15 +30,17 @@ El kit usaba Google Fonts; aquí todas las familias se **auto-hospedan** con `@f
 | Raleway | Raleway Variable | Detalles |
 | Slabo 13px / Slabo 27px | iguales | Títulos de widgets |
 | Antic Slab | igual | Menú principal |
-| Archer (TTF subido al WordPress, fuente comercial) | Roboto Slab Variable | Enlaces |
+| Archer (TTF subido al WordPress, fuente comercial) | Zilla Slab (misma anchura de texto, ±1 %) | Enlaces, título "Síguenos" del footer, títulos de /nosotros/ y /eventos/ |
 | Gotham Rounded | Montserrat Variable | Detalles |
 | Font Awesome 5 Free | Subconjunto de 35 iconos (`src/styles/wp/fontawesome.css`) | Iconos de listas, redes, botones |
 | eicons (Elementor) | SVG inline (`scripts/wp-import/lib/icons.mjs`) | Flechas de carrusel, estrellas, play, menú |
 
 **Archer:** el WordPress servía archivos TTF de Archer descargados de un sitio de fuentes
-gratuitas. Archer es una fuente comercial (Hoefler&Co.); no se copió al repositorio. Si la
-empresa tiene licencia web, se agregan los archivos y se quita el reemplazo en
-`scripts/wp-import/lib/css.mjs` (`FONT_MAP`).
+gratuitas. Archer es una fuente comercial (Hoefler&Co.); no se copió al repositorio. Se
+sustituye por **Zilla Slab**, elegida midiendo el ancho de los mismos títulos en ambas fuentes
+(diferencia menor del 1 %, así que los saltos de línea se conservan). Si la empresa tiene
+licencia web, se agregan los archivos y se quita el reemplazo en `scripts/wp-import/lib/css.mjs`
+(`FONT_MAP` y `FONT_MAP_UNQUOTED`).
 
 ## Logo e íconos
 

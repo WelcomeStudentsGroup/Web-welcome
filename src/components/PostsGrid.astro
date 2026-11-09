@@ -59,8 +59,8 @@ const pageUrl = (n: number) => (n === 1 ? baseUrl : `${baseUrl}${baseUrl.startsW
 {
   paginate && total > 1 && (
     <nav class="elementor-pagination" aria-label="Paginación">
-      {Array.from({ length: total }, (_, i) => i + 1).map((n) =>
-        n === current ? (
+      {Array.from({ length: total }, (_, i) => i + 1).map((n) => (
+        <Fragment>{' '}{n === current ? (
           <span aria-current="page" class="page-numbers current">
             <span class="elementor-screen-only">Page</span>
             {n}
@@ -70,8 +70,8 @@ const pageUrl = (n: number) => (n === 1 ? baseUrl : `${baseUrl}${baseUrl.startsW
             <span class="elementor-screen-only">Page</span>
             {n}
           </a>
-        ),
-      )}
+        )}</Fragment>
+      ))}
     </nav>
   )
 }

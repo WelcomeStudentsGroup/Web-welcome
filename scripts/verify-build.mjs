@@ -7,7 +7,8 @@
 import { readdir, readFile, stat } from 'node:fs/promises';
 import { join, relative } from 'node:path';
 
-const DIST = new URL('../dist/', import.meta.url).pathname;
+// Carpeta a revisar: dist/ por defecto, u otra si se pasa como argumento (node scripts/verify-build.mjs otra/carpeta).
+const DIST = process.argv[2] ? new URL(process.argv[2].replace(/\/?$/, '/'), `file://${process.cwd()}/`).pathname : new URL('../dist/', import.meta.url).pathname;
 const errors = [];
 const warnings = [];
 
